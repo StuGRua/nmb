@@ -51,13 +51,13 @@
                         <label for="name" class="col-sm-2 control-label">账号</label>
                         <div class="col-sm-10">
 
-                            {{ loginform.name(size=20,class="form-control",id="name",placeholder="注册邮箱") }}
+                            {{ loginform.name(size=20,class="form-control",id="name",placeholder="请输入账号") }}
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="pass" class="col-sm-2 control-label">密码</label>
                         <div class="col-sm-10">
-                            {{loginform.password(size=40,class="form-control",placeholder="请输入密码") }}
+                            {{loginform.password(size=40,type="password",class="form-control",placeholder="请输入密码") }}
                         </div>
                         <hr>
                         {{ loginform.csrf_token }}
@@ -78,7 +78,7 @@
                     <div class="form-group">
                         <label for="name" class="col-sm-2 control-label">用户名</label>
                         <div class="col-sm-10">
-                            {{signinform.name(size=40,class="form-control",id="name",placeholder="请输入账号")}}
+                            {{signinform.name(size=40,class="form-control",id="name",placeholder="用户名")}}
                         </div>
                     </div>
                     <div class="form-group">
@@ -103,7 +103,6 @@
                         {{ signinform.csrf_token }}
                         <button type="submit" class="btn btn-primary center-block btn btn-danger" value="Submit" id="res_submit">注册</button>
                     </div>
-                    {{signinform.errors}}
                 </form>
 
 

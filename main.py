@@ -3,14 +3,14 @@ import flask_sqlalchemy
 from flask_sqlalchemy import SQLAlchemy
 import pymysql
 import datetime
-from forms import loginform,signinform
+from forms import loginform,signinform,new_post_form,comment_form
 from errors import *
 from enc import *
 import time
 from cookiemaker import *
 from utilities import *
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:root@127.0.0.1:3306/nmb0"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:aA_iul453_bB@127.0.0.1:3306/nmb0"
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY']='wtfwtf'
@@ -37,6 +37,25 @@ class User(db.Model):
         self.confirmed = confirmed
         self.avatar = avatar
 
+class posts(db.Model):
+    __tablename__='posts'
+    id = db.Column(db.Integer, primary_key=True,unique=True)#主键，辨识
+    poster = db.Column(db.String(10),nullable=True)#发布者的kookie
+    head = db.Column(db.Boolean,default=False)#是否是第一条
+    next = db.Column(db.Integer,nullable=True,default=0)#下一条
+    post_time = db.Column(db.DateTime,nullable=True)#生成时间
+    title = db.Column(db.Text,nullable=True)#标题
+    content = db.Column(db.Text,nullable=True)#内容
+    section = db.Column(db.String(40),nullable=True,default='main')#板块
+    def __init__(self,poster,head,next,title,content,section='main'):
+        self.poster = poster
+        self.head = head
+        self.next = next
+        self.post_time=datetime.datetime.now()
+        self.title = title
+        self.content = content
+        self.section = section
+
 
 def checklogin():
     if session.get('username') != None:
@@ -54,6 +73,124 @@ def api(kw):
 def home():
     ip = request.remote_addr
     return render_template('home.html',userip = ip,datetime=datetime.datetime.now(),loginform=loginform(),signinform=signinform())
+@app.route('/new',methods=['POST'])
+def newpost():
+    if checklogin():
+        return redirect(url_for('home',nologin=1))
+    form = new_post_form()
+    if form.validate_on_submit():
+        title = form.title.data
+        content = form.content.data
+        section = form.section.data
+        print(title,content)
+        post = posts(poster=session.get('kookie'),head=True,next=0,title=title,content=content,section=section)
+        try:
+            db.session.add(post)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(e)
+            #return redirect(url_for('home'))
+            return return500()
+        return redirect(url_for('homepage',postok=1))
+    else:
+        print('no validate====================')
+        return return500()
+@app.route('/comment/<post_id>',methods=['POST'])
+def comment(post_id):
+    print(post_id)#id:给【ID】这个串评论
+    identifier = md5(str(time.time()))
+    if checklogin():
+        return redirect(url_for('home',nologin=1))
+    form = comment_form()
+    if form.validate_on_submit():
+        content = form.content.data
+        print(content)
+        section = posts.query.filter(posts.id==post_id).first().section
+
+        post = posts(poster=session.get('kookie'),head=False,next=0,title=identifier,content=content,section=section)
+        try:
+            db.session.add(post)
+            db.session.commit()
+            newid = posts.query.filter(posts.title==identifier).first().id
+            next_id = posts.query.filter(posts.id==post_id).first().next
+            while next_id != 0:
+                temp = posts.query.filter(posts.id==next_id).first().next
+                if temp == 0:
+                    break;
+                else:
+                    next_id = temp
+            if posts.query.filter(posts.id==post_id).first().next==0:
+                next_id = post_id
+            posts.query.filter(posts.id == next_id).update({'next': newid})
+            try:
+                db.session.commit()
+                print('comment ok')
+                return redirect(request.referrer)
+            except Exception as e:
+                db.session.rollback()
+                print(e)
+                return return500()
+        except Exception as e:
+            db.session.rollback()
+            print(e)
+            return return500()
+    else:
+        print('no validate====================')
+        return return500()
+
+
+    return 'ok'
+@app.route('/viewpost/<id>',methods=['GET','POST'])
+def viewpost(id):#id是headpost的主键
+    form = comment_form()
+    allposts = []
+    next_id=0
+    post = posts.query.filter(posts.id==id).first()
+    if post == None:
+        return return404()
+    posterkookie = post.poster
+    #posteravatar = User.query.filter(User.kookies == posterkookie).first().avatar
+    allposts.append(post)#将一楼加至list
+    next_id = post.next#每一楼的id
+    while next_id !=0:
+        nextpost = posts.query.filter(posts.id==next_id).first()
+        allposts.append(nextpost)
+        next_id = nextpost.next
+
+    return render_template('viewpost.html',form=form,post=post,allposts=allposts,len_of_all_posts = len(allposts))
+
+
+@app.route('/changeavatar/<avtid>',methods=['GET','POST'])
+def changeavt(avtid):
+    if checklogin():
+        return redirect(url_for('home',nologin=1))
+    account = session.get('account')
+    result = User.query.filter(User.email == account).update({'avatar':avtid})
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        print(e)
+        return return500()
+    return redirect(url_for('homepage'))
+@app.route('/newkookie',methods=['GET','POST'])
+def newkookie():
+    if checklogin():
+        return redirect(url_for('home',nologin=1))
+    username = session.get('username')
+    account = session.get('account')
+    kookie = cookie(username)
+    result = User.query.filter(User.email == account).update({'kookies': kookie})
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        print(e)
+        return return500()
+    return redirect(url_for('homepage'))
+
+
 @app.route('/home',methods=['GET','POST'])
 def homepage():
     if checklogin():
@@ -62,8 +199,14 @@ def homepage():
     result = User.query.filter(User.username == username).first()
     kookies=result.kookies
     avatar = result.avatar
-    avatarhref = '\static/avatars/'+str(avatar)+'.png'
-    return render_template('portal.html',username=username,kookies=kookies,avatarhref=avatarhref)
+    account = result.email
+    session['account'] = account
+    session['kookie'] = kookies
+    avatarhref = '\static/avatars/'+str(avatar)+'.jpg'
+    allposts = posts.query.filter(posts.head==True).order_by(-posts.post_time).all()
+    return render_template('portal.html',username=username,kookies=kookies,\
+                           avatarhref=avatarhref,account=account,newpostform=new_post_form(),\
+                           allposts = allposts)
 @app.route('/logout')
 def logout():
     session.clear()
@@ -122,4 +265,4 @@ def signin():
 
 if __name__ == '__main__':
     db.create_all()
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=6060,debug=True)
