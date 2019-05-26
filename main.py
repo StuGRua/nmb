@@ -47,10 +47,12 @@ class posts(db.Model):
     title = db.Column(db.Text,nullable=True)#标题
     content = db.Column(db.Text,nullable=True)#内容
     section = db.Column(db.String(40),nullable=True,default='main')#板块
+    avatar = db.Column(db.Integer,default=0)
     def __init__(self,poster,head,next,title,content,section='main'):
         self.poster = poster
         self.head = head
         self.next = next
+        self.avatar = User.query.filter(User.kookies==poster).first().avatar
         self.post_time=datetime.datetime.now()
         self.title = title
         self.content = content
@@ -59,8 +61,14 @@ class posts(db.Model):
 
 def checklogin():
     if session.get('username') != None:
-        return False
-    return True
+        return False#已登陆
+    return True#未登陆
+def checkkookie():
+    username = session.get('username')
+    if User.query.filter(User.username==username).first().kookies != '00000000':
+        return False#已有有效kookie
+    return True#没有有效kookie
+
 @app.route('/api/<kw>/')
 def api(kw):
     if kw == 'timestamp':
@@ -77,6 +85,8 @@ def home():
 def newpost():
     if checklogin():
         return redirect(url_for('home',nologin=1))
+    if checkkookie():
+        return redirect(url_for('homepage',nokookie=1))
     form = new_post_form()
     if form.validate_on_submit():
         title = form.title.data
@@ -87,12 +97,13 @@ def newpost():
         try:
             db.session.add(post)
             db.session.commit()
+            return redirect(url_for('homepage',postok=1))
         except Exception as e:
             db.session.rollback()
             print(e)
             #return redirect(url_for('home'))
             return return500()
-        return redirect(url_for('homepage',postok=1))
+        
     else:
         print('no validate====================')
         return return500()
@@ -102,12 +113,13 @@ def comment(post_id):
     identifier = md5(str(time.time()))
     if checklogin():
         return redirect(url_for('home',nologin=1))
+    if checkkookie():
+        return redirect(url_for('homepage',nokookie=1))
     form = comment_form()
     if form.validate_on_submit():
         content = form.content.data
         print(content)
         section = posts.query.filter(posts.id==post_id).first().section
-
         post = posts(poster=session.get('kookie'),head=False,next=0,title=identifier,content=content,section=section)
         try:
             db.session.add(post)
@@ -166,9 +178,17 @@ def changeavt(avtid):
     if checklogin():
         return redirect(url_for('home',nologin=1))
     account = session.get('account')
-    result = User.query.filter(User.email == account).update({'avatar':avtid})
+    kookie = User.query.filter(User.email==account).first().kookies
+    User.query.filter(User.email == account).update({'avatar':avtid})
     try:
         db.session.commit()
+        try:
+            posts.query.filter(posts.poster==kookie).update({'avatar':avtid})
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(e)
+            return return500()
     except Exception as e:
         db.session.rollback()
         print(e)
@@ -233,7 +253,7 @@ def login():
         else:
             return redirect(url_for('home',err=1))
     else:
-        return redirect(url_for('home',err=1))
+        return redirect(url_for('home',novalidation=1))
 
 @app.route('/signin',methods=['GET','POST'])
 def signin():
@@ -254,13 +274,14 @@ def signin():
             db.session.add(newuser)
             db.session.commit()
             session['username']=username
+            session['kookies']='00000000'
             return redirect(url_for('homepage'))
         except Exception as e:
             db.session.rollback()
             print(e)
             return redirect(url_for('home'))
     else:
-        return redirect(url_for('home',err=1))
+        return redirect(url_for('home',novalidation=1))
 
 
 if __name__ == '__main__':
