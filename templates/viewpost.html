@@ -12,13 +12,18 @@
         <p>ID:{{post.id}} [板块：{{post.section}}] {{post.title}} </p>
 		<p><img src="/static/avatars/{{post.avatar}}.jpg" width="100px" height="auto">{{post.poster}}</p>
 		<p> {{post.post_time}}</p>
-        <p>{{post.content}}</p>
+		<p>{{post.content}}</p>
+		<p><img src="/static/uploads/{{post.id}}.png"></p>
         <br>
     </div>
     {% for i in range(1,len_of_all_posts)%}
     <p>ID:{{allposts[i].id}}<img src="/static/avatars/{{allposts[i].avatar}}.jpg" width="100px" height="auto">{{allposts[i].poster}}</p>
     <p>{{allposts[i].post_time}}</p>
-    <p>{{allposts[i].content}}</p>
+	<p>{{allposts[i].content}}</p>
+	<p>{%if allposts[i].withpic %}
+			<img src="/static/uploads/{{allposts[i].id}}.png" height="200px" width="auto">
+			{% endif %}
+		</p>
     <br>
     {% endfor %}
 </body>
@@ -38,9 +43,12 @@
 				</h4>
 			</div>
 			<div class="modal-body">
-                <form action="/comment/{{post.id}}" method="post">
+                <form action="/comment/{{post.id}}" method="post" enctype="multipart/form-data">
                     {{form.csrf_token}}
-                    {{form.content.label}}  {{form.content}}<br>
+					{{form.content.label}}  {{form.content}}<br>
+					<div class="form-group col-sm-6" >
+							<input type="file" name="pic" class="form-control btn-info">
+						</div><br>
                     {{form.submit}}
                 </form>
 			</div>

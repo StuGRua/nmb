@@ -8,11 +8,33 @@
 	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
-用户名：{{username}}
-饼干：{{kookies}}
-账号：{{account}}
-<img src="{{avatarhref}}" height="auto" width="100px">
-<a href="/logout">logout</a>
+	<nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid"> 
+    <div class="navbar-header">
+        <a class="navbar-brand" href="#">U.N.OWEN</a>
+    </div>
+    <div>
+        <ul class="nav navbar-nav">
+            
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    板块： 
+                    <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="/section/main">综合</a></li>
+                    <li><a href="/section/other">其他</a></li>
+                    <li><a href="/section/test">其他的其他</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    </div>
+</nav>
+用户名：{{result.username}}
+饼干：{{result.kookies}}
+账号：{{result.email}}
+<img src="\static/avatars/{{result.avatar}}.jpg" height="auto" width="100px">
 <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
 	更改头像
 </button>
@@ -93,11 +115,14 @@
 				</h4>
 			</div>
 			<div class="modal-body">
-                <form action="/new" method="post">
+				<form action="/new" method="post" enctype="multipart/form-data">
                     {{newpostform.csrf_token }}
                     {{newpostform.title.label}}    {{newpostform.title}}<br>
                     {{newpostform.content.label}}  {{newpostform.content}}
-                    {{newpostform.section.label}}   {{newpostform.section}}
+					{{newpostform.section.label}}   {{newpostform.section}}<br>
+					<div class="form-group col-sm-6" >
+						<input type="file" name="pic" class="form-control btn-info">
+					</div>
                     {{newpostform.submit}}
                 </form>
 			</div>
@@ -113,13 +138,52 @@
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal -->
 </div>
+{% if insection == 1%}
+	<a href="/home">
+		<button class="btn btn-success btn-lg" data-toggle="modal" data-target="#myModal4">
+			返回主页
+		</button>
+	</a>
+{% endif %}
+<button class="btn btn-warning btn-lg" data-toggle="modal" data-target="#myModal4">
+	OUT
+</button>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
+				<h4 class="modal-title" id="myModalLabel3">
+					是否要登出？
+				</h4>
+			</div>
+			<div class="modal-body">
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消
+				</button>
+                <a href="/logout">
+				<button type="button" class="btn btn-danger">
+					确定
+				</button>
+				</a>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal -->
+</div>
 <br>
-{% for posts in allposts %}
+{% for posts in allposts %}<hr>
 <a href="/viewpost/{{posts.id}}">
-    <p>[板块：{{posts.section}}] {{posts.title}}</p>
-    <p> <img src="/static/avatars/{{posts.avatar}}.jpg" width="100px" height="auto">{{posts.poster}} {{posts.post_time}}</p>
-    <p>{{posts.content}}</p>
-    <br><br>
+    <p>ID:{{posts.id}} [板块：{{posts.section}}] {{posts.title}}</p>
+    <p> <img src="/static/avatars/{{posts.avatar}}.jpg" width="30px" height="auto">{{posts.poster}} {{posts.post_time}}</p>
+    <p>{%if posts.withpic %}
+		<img src="/static/uploads/{{posts.id}}.png" height="100px" width="auto">
+		{% endif %}{{posts.content}}</p>
+    <hr>
 </a>
 {% endfor %}
 </body>
