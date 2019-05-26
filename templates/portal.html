@@ -8,9 +8,9 @@
 	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
-{{username}}
-{{kookies}}
-{{account}}
+用户名：{{username}}
+饼干：{{kookies}}
+账号：{{account}}
 <img src="{{avatarhref}}" height="auto" width="100px">
 <a href="/logout">logout</a>
 <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
@@ -117,7 +117,7 @@
 {% for posts in allposts %}
 <a href="/viewpost/{{posts.id}}">
     <p>[板块：{{posts.section}}] {{posts.title}}</p>
-    <p> {{posts.poster}} {{posts.post_time}}</p>
+    <p> <img src="/static/avatars/{{posts.avatar}}.jpg" width="100px" height="auto">{{posts.poster}} {{posts.post_time}}</p>
     <p>{{posts.content}}</p>
     <br><br>
 </a>

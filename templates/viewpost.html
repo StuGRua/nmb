@@ -9,13 +9,14 @@
 </head>
 <body>
     <div>
-        <p>{{post.id}} [板块：{{post.section}}] {{post.title}} {{post.poster}}</p>
-        <p> {{post.post_time}}</p>
+        <p>ID:{{post.id}} [板块：{{post.section}}] {{post.title}} </p>
+		<p><img src="/static/avatars/{{post.avatar}}.jpg" width="100px" height="auto">{{post.poster}}</p>
+		<p> {{post.post_time}}</p>
         <p>{{post.content}}</p>
         <br>
     </div>
     {% for i in range(1,len_of_all_posts)%}
-    <p>{{allposts[i].poster}}</p>
+    <p>ID:{{allposts[i].id}}<img src="/static/avatars/{{allposts[i].avatar}}.jpg" width="100px" height="auto">{{allposts[i].poster}}</p>
     <p>{{allposts[i].post_time}}</p>
     <p>{{allposts[i].content}}</p>
     <br>
