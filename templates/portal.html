@@ -8,36 +8,83 @@
 	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
-	<nav class="navbar navbar-default" role="navigation">
+	<nav class="navbar navbar-default fixed-top navbar-light bg-faded" role="navigation">
     <div class="container-fluid"> 
     <div class="navbar-header">
-        <a class="navbar-brand" href="#">U.N.OWEN</a>
+        <a class="navbar-brand">U.N.OWEN</a>
     </div>
     <div>
         <ul class="nav navbar-nav">
             
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    板块： 
+                    {{section}}
                     <b class="caret"></b>
                 </a>
                 <ul class="dropdown-menu">
+					<li><a href="/home">时间线</a></li>
                     <li><a href="/section/main">综合</a></li>
                     <li><a href="/section/other">其他</a></li>
                     <li><a href="/section/test">其他的其他</a></li>
                 </ul>
-            </li>
+			</li>
+			<!--
+			<li class="nav-item">
+				<a class="nav-link">用户名：{{result.username}}</a>
+			</li>-->
+			<li class="nav-item dropdown">
+				<a class="nav-link" href="#" class="dropdown-toggle" data-toggle="dropdown">
+					饼干：{{result.kookies}}
+					<b class="caret"></b>
+				</a>
+				<ul class="dropdown-menu">
+					<li><!--
+						<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal2">
+							获取新饼干
+						</button>-->
+						<a href="/newkookie">获取新饼干</a>
+					</li>
+				</ul>
+			</li>
+			<li class="nav-item">
+				<img src="\static/avatars/{{result.avatar}}.jpg" height="auto" width="50px">
+			</li>
+			<li class="nav-item dropdown">
+				
+				<a class="nav-link" href="#" class="dropdown-toggle" data-toggle="dropdown">
+					
+					<b class="caret"></b>
+				</a>
+				<ul class="dropdown-menu">
+					<li>
+						<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+							更改头像
+						</button>
+					</li>
+				</ul>	
+			</li>
+			<li class="nav-item">
+				<a class="nav-link">{{result.email}}</a>
+			</li>
+			<li class="nav-item dropdown">
+				<a class="nav-link" href="#" class="dropdown-toggle" data-toggle="dropdown">
+					注销
+					<b class="caret"></b>
+				</a>
+				<ul class="dropdown-menu">
+					<li>
+						<a href="/logout">确定注销</a>
+					</li>
+				</ul>
+			</li>
         </ul>
     </div>
     </div>
 </nav>
-用户名：{{result.username}}
-饼干：{{result.kookies}}
-账号：{{result.email}}
-<img src="\static/avatars/{{result.avatar}}.jpg" height="auto" width="100px">
+<!--
 <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
 	更改头像
-</button>
+</button>-->
 <!-- 模态框（Modal） -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
@@ -65,9 +112,11 @@
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal -->
 </div>
+<!--
 <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal2">
 	获取新饼干
 </button>
+-->
 <!-- 模态框（Modal） -->
 <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
@@ -138,16 +187,10 @@
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal -->
 </div>
-{% if insection == 1%}
-	<a href="/home">
-		<button class="btn btn-success btn-lg" data-toggle="modal" data-target="#myModal4">
-			返回主页
-		</button>
-	</a>
-{% endif %}
+<!--
 <button class="btn btn-warning btn-lg" data-toggle="modal" data-target="#myModal4">
 	OUT
-</button>
+</button>-->
 <!-- 模态框（Modal） -->
 <div class="modal fade" id="myModal4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog">

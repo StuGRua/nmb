@@ -85,8 +85,11 @@ def api(kw):
 
 @app.route('/',methods=['GET','POST'])
 def home():
-    ip = request.remote_addr
-    return render_template('home.html',userip = ip,datetime=datetime.datetime.now(),loginform=loginform(),signinform=signinform())
+    tenposts = posts.query.filter(posts.head==True).order_by(-posts.post_time).all()
+    return render_template('view/portal.html',tenposts=tenposts,userip = request.remote_addr,datetime=datetime.datetime.now(),\
+        loginform=loginform(),signinform=signinform())
+
+        
 @app.route('/new',methods=['POST'])
 def newpost():
     if checklogin():
@@ -308,8 +311,12 @@ def homepage():
     session['kookie'] = result.kookies
     allposts = posts.query.filter(posts.head==True).order_by(-posts.post_time).all()
     return render_template('portal.html',result=result,newpostform=new_post_form(),\
-                           allposts = allposts)
-
+                           allposts = allposts,section='时间线')
+@app.route('/test',methods=['GET','POST'])
+def test():
+    tenposts = posts.query.filter(posts.head==True).order_by(-posts.post_time).all()
+    return render_template('view/portal.html',tenposts=tenposts,userip = request.remote_addr,datetime=datetime.datetime.now(),\
+        loginform=loginform(),signinform=signinform())
 
 
 @app.route('/section/<section_name>',methods=['GET','POST'])
@@ -324,7 +331,7 @@ def viewsection(section_name):
     session['kookie'] = result.kookies
     relposts = posts.query.filter(posts.section == section_name).filter(posts.head==True).order_by(-posts.post_time).all()
     return render_template('portal.html',result=result,newpostform=new_post_form(),\
-                           allposts = relposts,insection=1)
+                           allposts = relposts,section=section_name)
 
 
 @app.route('/logout')
