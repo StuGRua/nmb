@@ -16,9 +16,8 @@
             <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.3/html5shiv.js"></script>
             <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
-	<script>
-
-	</script>
+		<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+		<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 
 <body>
@@ -63,21 +62,10 @@
 						</ul>
 					</li>
 					<li class="nav-item">
-						<img src="\static/avatars/{{result.avatar}}.jpg" height="auto" width="50px">
-					</li>
-					<li class="nav-item dropdown">
-
-						<a class="nav-link" href="#" class="dropdown-toggle" data-toggle="dropdown">
-
-							<b class="caret"></b>
-						</a>
-						<ul class="dropdown-menu">
-							<li>
-								<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-									更改头像
-								</button>
-							</li>
-						</ul>
+							<a class="nav-link" href="#"class="dropdown-toggle" data-toggle="modal" data-target="#myModal" style="padding-top:0;padding-bottom:0;"><img src="\static/avatars/{{result.avatar}}.jpg" height="auto" width="50px">
+								<b class="caret"></b>
+							</a>
+							
 					</li>
 					<li class="nav-item">
 						<a class="nav-link">{{result.email}}</a>
@@ -239,14 +227,12 @@
 	<hr>
 
 	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<a href="/viewpost/{{posts.id}}">
 		<div class="panel panel-default">
 			<div class="panel-heading">
 
 				<h3 class="panel-title">
-					<a href="/viewpost/{{posts.id}}">
 						<p>ID:{{posts.id}} [板块：{{posts.section}}] {{posts.title}}</p>
-
-					</a>
 					<p> <img src="/static/avatars/{{posts.avatar}}.jpg" width="30px" height="auto">{{posts.poster}}
 						{{posts.post_time}}</p>
 				</h3>
@@ -260,7 +246,7 @@
 		</div>
 
 
-
+		</a>
 	</div>
 
 
