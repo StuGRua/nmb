@@ -2,81 +2,99 @@
 <html lang="zh-cn">
 
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Portal</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Portal</title>
 
-    <!-- Bootstrap CSS -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+	<!-- Bootstrap CSS -->
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
+	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!--[if lt IE 9]>
             <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.3/html5shiv.js"></script>
             <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
-    <script>
+	<script>
 
-    </script>
+	</script>
 </head>
 
 <body>
-    <div>
-        <p>ID:{{post.id}} [板块：{{post.section}}] {{post.title}} </p>
-		<p><img src="/static/avatars/{{post.avatar}}.jpg" width="100px" height="auto">{{post.poster}}</p>
-		<p> {{post.post_time}}</p>
-		<p>{{post.content}}</p>
-		<p><img src="/static/uploads/{{post.id}}.png"></p>
-        <br>
-    </div>
-    {% for i in range(1,len_of_all_posts)%}
-    <p>ID:{{allposts[i].id}}<img src="/static/avatars/{{allposts[i].avatar}}.jpg" width="100px" height="auto">{{allposts[i].poster}}</p>
-    <p>{{allposts[i].post_time}}</p>
-	<p>{{allposts[i].content}}</p>
-	<p>{%if allposts[i].withpic %}
+
+	<div class="container">
+
+
+
+
+
+
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<p>ID:{{post.id}} [板块：{{post.section}}] {{post.title}} </p>
+			<p><img src="/static/avatars/{{post.avatar}}.jpg" width="100px" height="auto">{{post.poster}}</p>
+			<p> {{post.post_time}}</p>
+			<p>{{post.content}}</p>
+			<p><img src="/static/uploads/{{post.id}}.png"></p>
+			<br>
+		</div>
+		{% for i in range(1,len_of_all_posts)%}
+		<p>ID:{{allposts[i].id}}<img src="/static/avatars/{{allposts[i].avatar}}.jpg" width="100px"
+				height="auto">{{allposts[i].poster}}</p>
+		<p>{{allposts[i].post_time}}</p>
+		<p>{{allposts[i].content}}</p>
+		<p>{%if allposts[i].withpic %}
 			<img src="/static/uploads/{{allposts[i].id}}.png" height="200px" width="auto">
 			{% endif %}
 		</p>
-    <br>
-    {% endfor %}
-</body>
-<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal2">
-	+
-</button>
-<!-- 模态框（Modal） -->
-<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-					&times;
-				</button>
-				<h4 class="modal-title" id="myModalLabel2">
-					++
-				</h4>
-			</div>
-			<div class="modal-body">
-                <form action="/comment/{{post.id}}" method="post" enctype="multipart/form-data">
-                    {{form.csrf_token}}
-					{{form.content.label}}  {{form.content}}<br>
-					<div class="form-group col-sm-6" >
-							<input type="file" name="pic" class="form-control btn-info">
-						</div><br>
-                    {{form.submit}}
-                </form>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">关闭
-				</button>
-                <!--
+		<br>
+		{% endfor %}
+
+		<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal2">
+			+
+		</button>
+		<!-- 模态框（Modal） -->
+		<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+			aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+							&times;
+						</button>
+						<h4 class="modal-title" id="myModalLabel2">
+							++
+						</h4>
+					</div>
+					<div class="modal-body">
+						<form action="/comment/{{post.id}}" method="post" enctype="multipart/form-data">
+							{{form.csrf_token}}
+							{{form.content.label}} {{form.content}}<br>
+							<div class="form-group col-sm-6">
+								<input type="file" name="pic" class="form-control btn-info">
+							</div><br>
+							{{form.submit}}
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+						</button>
+						<!--
 				<button type="button" class="btn btn-primary">
 					提交更改
 				</button>
 				-->
-			</div>
-		</div><!-- /.modal-content -->
-	</div><!-- /.modal -->
-</div>
-<h1><a href="/home">返回主页</a></h1>
+					</div>
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal -->
+		</div>
+
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<h1><a href="/home" class="btn btn-primary btn-lg" role="button">返回主页</a></h1>
+		</div>
+
+
+	</div>
+</body>
+
 </html>
