@@ -85,9 +85,10 @@ def api(kw):
 
 @app.route('/',methods=['GET','POST'])
 def home():
+    nologin = request.values.get('nologin')
     tenposts = posts.query.filter(posts.head==True).order_by(-posts.post_time).all()
     return render_template('view/portal.html',tenposts=tenposts,userip = request.remote_addr,datetime=datetime.datetime.now(),\
-        loginform=loginform(),signinform=signinform())
+        loginform=loginform(),signinform=signinform(),nologin=str(nologin))
 
         
 @app.route('/new',methods=['POST'])
@@ -237,6 +238,7 @@ def viewpost(id):#id是headpost的主键
     form = comment_form()
     allposts = []
     next_id=0
+    result=User.query.filter(User.kookies==session.get('kookies')).first()
     post = posts.query.filter(posts.id==id).first()
     if post == None:
         return return404()
@@ -249,7 +251,7 @@ def viewpost(id):#id是headpost的主键
         allposts.append(nextpost)
         next_id = nextpost.next
 
-    return render_template('viewpost.html',form=form,post=post,allposts=allposts,len_of_all_posts = len(allposts))
+    return render_template('viewpost.html',form=form,post=post,allposts=allposts,len_of_all_posts = len(allposts),result=result,loginform=loginform(),signinform=signinform())
 
 
 @app.route('/changeavatar/<avtid>',methods=['GET','POST'])

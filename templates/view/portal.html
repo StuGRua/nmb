@@ -1,14 +1,19 @@
+<!--这个页面是没登陆的人看到的-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="utf-8">
 	<title>Portal</title>
 	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
 	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
-	<nav class="navbar navbar-default fixed-top navbar-light bg-faded" role="navigation">
+	{% if nologin == '1' %}
+	<script>alert("登陆后才可进行更多操作，请登陆或注册！");</script>
+	{% endif %}
+	<nav class="navbar navbar-default fixed-top navbar-light bg-faded" role="navigation" style="position:fixed;top:0;left:0;width:100%;height:50px;float:left">
     <div class="container-fluid"> 
     <div class="navbar-header">
         <a class="navbar-brand">U.N.OWEN</a>
@@ -16,7 +21,7 @@
     <div>
         <ul class="nav navbar-nav">
             
-            <li class="dropdown">
+            <li class="dropdown" style="display:inline-block;">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     综合版：
                     <b class="caret"></b>
@@ -31,9 +36,6 @@
 			<li class="nav-item">
 				<a class="nav-link">{{userip}}</a>
 			</li>
-			<li class="nav-item">
-				<a class="nav-link">{{datetime}}</a>	
-			</li>
 			<li class="nav-item dropdown">
 				<a class="nav-link" href="#" class="dropdown-toggle" data-toggle="modal" data-target="#myModal">
 					登陆/注册
@@ -46,7 +48,7 @@
 </nav>
 <!-- 模态框（Modal） -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog" style="width:800px">
+	<div class="modal-dialog" style="">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
@@ -130,18 +132,42 @@
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal -->
 </div>
-<h1>{{userip}}你好！</h1><br><h2>当前服务器时间:{{datetime}}</h2>
-                <h1>提示：开发阶段天天删库，请重新注册!!!!!!!!!!!!!!!!!</h1>
+<div style="margin-top:60px;">
+<h1>{{userip}}你好！</h1>
+<br><h2>当前服务器时间:{{datetime}}</h2>
+<h1>提示：开发阶段天天删库，请重新注册!!!!!!!!!!!!!!!!!</h1>
 <br>
-{% for posts in tenposts %}<hr>
-<a href="/viewpost/{{posts.id}}">
-    <p>ID:{{posts.id}} [板块：{{posts.section}}] {{posts.title}}</p>
-    <p> <img src="/static/avatars/{{posts.avatar}}.jpg" width="30px" height="auto">{{posts.poster}} {{posts.post_time}}</p>
-    <p>{%if posts.withpic %}
-		<img src="/static/uploads/{{posts.id}}.png" height="100px" width="auto">
-		{% endif %}{{posts.content}}</p>
-    <hr>
-</a>
-{% endfor %}
+</div>
+{% for posts in tenposts %}
+	<hr>
+
+	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<a href="/viewpost/{{posts.id}}">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+
+				<h3 class="panel-title">
+					
+						<p>ID:{{posts.id}} [板块：{{posts.section}}] {{posts.title}}</p>
+
+					
+					<p> <img src="/static/avatars/{{posts.avatar}}.jpg" width="30px" height="auto">{{posts.poster}}
+						{{posts.post_time}}</p>
+				</h3>
+			</div>
+			<div class="panel-body">
+
+				<p>{%if posts.withpic %}
+					<img src="/static/uploads/{{posts.id}}.png" height="100px" width="auto">
+					{% endif %}{{posts.content}}</p>
+			</div>
+		</div>
+
+		</a>
+
+	</div>
+
+
+	{% endfor %}
 </body>
 </html>
