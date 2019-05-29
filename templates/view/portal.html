@@ -1,6 +1,7 @@
 <!--这个页面是没登陆的人看到的-->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="utf-8">
 	<title>Portal</title>
@@ -9,57 +10,73 @@
 	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
 	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
+
 <body>
 	{% if nologin == '1' %}
-	<script>alert("登陆后才可进行更多操作，请登陆或注册！");</script>
+	<script>
+		alert("登陆后才可进行更多操作，请登陆或注册！");
+	</script>
 	{% endif %}
-	<nav class="navbar navbar-default fixed-top navbar-light bg-faded" role="navigation" style="position:fixed;top:0;left:0;width:100%;height:50px;float:left">
-    <div class="container-fluid"> 
-    <div class="navbar-header">
-        <a class="navbar-brand">U.N.OWEN</a>
-    </div>
-    <div>
-        <ul class="nav navbar-nav">
-            
-            <li class="dropdown" style="display:inline-block;">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    综合版：
-                    <b class="caret"></b>
-                </a>
-                <ul class="dropdown-menu">
-					<li><a href="/home">时间线</a></li>
-                    <li><a href="/section/main">综合</a></li>
-                    <li><a href="/section/other">其他</a></li>
-                    <li><a href="/section/test">其他的其他</a></li>
-                </ul>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link">{{userip}}</a>
-			</li>
-			<li class="nav-item dropdown">
-				<a class="nav-link" href="#" class="dropdown-toggle" data-toggle="modal" data-target="#myModal">
-					登陆/注册
-					<b class="caret"></b>
-				</a>
-			</li>
-        </ul>
-    </div>
-    </div>
-</nav>
-<!-- 模态框（Modal） -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog" style="">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-					&times;
-				</button>
-				<h4 class="modal-title" id="myModalLabel">
-					登陆/注册
-				</h4>
+
+
+	<div class="container-fluid">
+		<nav class="navbar navbar-default fixed-top navbar-light bg-faded" role="navigation">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse"
+						data-target="#example-navbar-collapse">
+						<span class="sr-only">切换导航</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand">To-be-decided</a>
+				</div>
+				<div class="collapse navbar-collapse" id="example-navbar-collapse">
+					<ul class="nav navbar-nav">
+
+						<li class="dropdown" style="display:inline-block;">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								综合版：
+								<b class="caret"></b>
+							</a>
+							<ul class="dropdown-menu">
+								<li><a href="/home">时间线</a></li>
+								<li><a href="/section/main">综合</a></li>
+								<li><a href="/section/形势与政策">形势与政策</a></li>
+								<li><a href="/section/other">其他</a></li>
+								<li><a href="/section/test">其他的其他</a></li>
+							</ul>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link">{{userip}}</a>
+						</li>
+						<li class="nav-item dropdown">
+							<a class="nav-link" href="#" class="dropdown-toggle" data-toggle="modal"
+								data-target="#myModal">
+								登陆/注册
+								<b class="caret"></b>
+							</a>
+						</li>
+					</ul>
+				</div>
 			</div>
-			<div class="modal-body">
-					<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 panel panel-primary col-md-offset-3">
+		</nav>
+		<!-- 模态框（Modal） -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+			aria-hidden="true">
+			<div class="modal-dialog" style="">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+							&times;
+						</button>
+						<h4 class="modal-title" id="myModalLabel">
+							登陆/注册
+						</h4>
+					</div>
+					<div class="modal-body">
+						<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 panel panel-primary col-md-offset-3">
 							<div class="panel-heading">
 								<h3 class="panel-title">登陆</h3>
 							</div>
@@ -68,7 +85,7 @@
 									<div class="form-group">
 										<label for="name" class="col-sm-2 control-label">账号</label>
 										<div class="col-sm-10">
-				
+
 											{{ loginform.name(size=20,class="form-control",id="name",placeholder="请输入账号") }}
 										</div>
 									</div>
@@ -79,95 +96,110 @@
 										</div>
 										<hr>
 										{{ loginform.csrf_token }}
-										<button type="submit" class="btn btn-primary center-block  btn " value="Submit">登陆</button>
+										<button type="submit" class="btn btn-primary center-block  btn "
+											value="Submit">登陆</button>
 									</div>
 								</form>
 							</div>
-				
+
 						</div>
 						<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 panel panel-danger col-md-offset-3">
-								<div class="panel-heading">
-									<h3 class="panel-title">注册</h3>
-								</div>
-								<div class="panel-body">
-									<form class="form-horizontal" role="form" action="/signin" method="post">
-										<div class="form-group">
-											<label for="name" class="col-sm-2 control-label">用户名</label>
-											<div class="col-sm-10">
-												{{signinform.name(size=40,class="form-control",id="name",placeholder="用户名")}}
-											</div>
-										</div>
-										<div class="form-group">
-											<label for="pass" class="col-sm-2 control-label">密码</label>
-											<div class="col-sm-10">
-												{{signinform.password1(size=40,type="password",class="form-control",id="res_pass",placeholder="请输入密码")}}
-											</div>
-										</div>
-										<div class="form-group">
-											<label for="pass" class="col-sm-2 control-label">确认密码</label>
-											<div class="col-sm-10">
-												{{signinform.password2(size=40,type="password",class="form-control",id="res_pass1",placeholder="请再次输入密码")}}
-											</div>
-										</div>
-										<div class="form-group">
-											<label for="pass" class="col-sm-2 control-label">邮箱</label>
-											<div class="col-sm-10">
-												{{signinform.email(size=40,class="form-control",id="email",placeholder="请输入邮箱")}}
-											<span id="ale" class="label label-default"></span>
-											</div>
-											<hr>
-											{{ signinform.csrf_token }}
-											<button type="submit" class="btn btn-primary center-block btn btn-danger" value="Submit" id="res_submit">注册</button>
-										</div>
-									</form>
-					
-					
-								</div>
+							<div class="panel-heading">
+								<h3 class="panel-title">注册</h3>
 							</div>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">关闭
-				</button>
-			</div>
-		</div><!-- /.modal-content -->
-	</div><!-- /.modal -->
-</div>
-<div style="margin-top:60px;">
-<h1>{{userip}}你好！</h1>
-<br><h2>当前服务器时间:{{datetime}}</h2>
-<h1>提示：开发阶段天天删库，请重新注册!!!!!!!!!!!!!!!!!</h1>
-<br>
-</div>
-{% for posts in tenposts %}
-	<hr>
+							<div class="panel-body">
+								<form class="form-horizontal" role="form" action="/signin" method="post">
+									<div class="form-group">
+										<label for="name" class="col-sm-2 control-label">用户名</label>
+										<div class="col-sm-10">
+											{{signinform.name(size=40,class="form-control",id="name",placeholder="用户名")}}
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="pass" class="col-sm-2 control-label">密码</label>
+										<div class="col-sm-10">
+											{{signinform.password1(size=40,type="password",class="form-control",id="res_pass",placeholder="请输入密码")}}
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="pass" class="col-sm-2 control-label">确认密码</label>
+										<div class="col-sm-10">
+											{{signinform.password2(size=40,type="password",class="form-control",id="res_pass1",placeholder="请再次输入密码")}}
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="pass" class="col-sm-2 control-label">邮箱</label>
+										<div class="col-sm-10">
+											{{signinform.email(size=40,class="form-control",id="email",placeholder="请输入邮箱")}}
+											<span id="ale" class="label label-default"></span>
+										</div>
+										<hr>
+										{{ signinform.csrf_token }}
+										<button type="submit" class="btn btn-primary center-block btn btn-danger"
+											value="Submit" id="res_submit">注册</button>
+									</div>
+								</form>
 
-	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-			<a href="/viewpost/{{posts.id}}">
-		<div class="panel panel-default">
-			<div class="panel-heading">
 
-				<h3 class="panel-title">
-					
-						<p>ID:{{posts.id}} [板块：{{posts.section}}] {{posts.title}}</p>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+						</button>
+					</div>
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal -->
+		</div>
 
-					
-					<p> <img src="/static/avatars/{{posts.avatar}}.jpg" width="30px" height="auto">{{posts.poster}}
-						{{posts.post_time}}</p>
-				</h3>
-			</div>
-			<div class="panel-body">
 
-				<p>{%if posts.withpic %}
-					<img src="/static/uploads/{{posts.id}}.png" height="100px" width="auto">
-					{% endif %}{{posts.content}}</p>
+
+
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-top:60px;">
+
+			<div class="well well-lg">
+				<h1>{{userip}}你好！</h1>
+				<br>
+				<h2>当前服务器时间:{{datetime}}</h2>
+				<h1>提示：开发阶段天天删库，请重新注册!!!!!!!!!!!!!!!!!</h1>
+				<br>
 			</div>
 		</div>
 
-		</a>
 
+		{% for posts in tenposts %}
+		<hr>
+
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<a href="/viewpost/{{posts.id}}">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+
+						<h3 class="panel-title">
+
+							<p>ID:{{posts.id}} [板块：{{posts.section}}] {{posts.title}}</p>
+
+
+							<p> <img src="/static/avatars/{{posts.avatar}}.jpg" width="30px"
+									height="auto">{{posts.poster}}
+								{{posts.post_time}}</p>
+						</h3>
+					</div>
+					<div class="panel-body">
+
+						<p>{%if posts.withpic %}
+							<img src="/static/uploads/{{posts.id}}.png" height="100px" width="auto">
+							{% endif %}{{posts.content}}</p>
+					</div>
+				</div>
+
+			</a>
+
+		</div>
+
+
+		{% endfor %}
 	</div>
-
-
-	{% endfor %}
 </body>
+
 </html>

@@ -16,8 +16,8 @@
             <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.3/html5shiv.js"></script>
             <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
-	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
-	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+		<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 
 <body>
@@ -25,16 +25,9 @@
 		<nav class="navbar navbar-default fixed-top navbar-light bg-faded" role="navigation">
 
 			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse"
-					data-target="#example-navbar-collapse">
-					<span class="sr-only">切换导航</span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
-				<a class="navbar-brand">To-be-decided</a>
+				<a class="navbar-brand">U.N.OWEN</a>
 			</div>
-			<div class="collapse navbar-collapse" id="example-navbar-collapse">
+			<div>
 				<ul class="nav navbar-nav">
 
 					<li class="dropdown">
@@ -45,7 +38,6 @@
 						<ul class="dropdown-menu">
 							<li><a href="/home">时间线</a></li>
 							<li><a href="/section/main">综合</a></li>
-							<li><a href="/section/形势与政策">形势与政策</a></li>
 							<li><a href="/section/other">其他</a></li>
 							<li><a href="/section/test">其他的其他</a></li>
 						</ul>
@@ -70,12 +62,10 @@
 						</ul>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="#" class="dropdown-toggle" data-toggle="modal" data-target="#myModal"
-							style="padding-top:0;padding-bottom:0;"><img src="\static/avatars/{{result.avatar}}.jpg"
-								height="auto" width="50px">
-							<b class="caret"></b>
-						</a>
-
+							<a class="nav-link" href="#"class="dropdown-toggle" data-toggle="modal" data-target="#myModal" style="padding-top:0;padding-bottom:0;"><img src="\static/avatars/{{result.avatar}}.jpg" height="auto" width="50px">
+								<b class="caret"></b>
+							</a>
+							
 					</li>
 					<li class="nav-item">
 						<a class="nav-link">{{result.email}}</a>
@@ -237,23 +227,23 @@
 	<hr>
 
 	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-		<a href="/viewpost/{{posts.id}}">
-			<div class="panel panel-default">
-				<div class="panel-heading">
+			<a href="/viewpost/{{posts.id}}">
+		<div class="panel panel-default">
+			<div class="panel-heading">
 
-					<h3 class="panel-title">
+				<h3 class="panel-title">
 						<p>ID:{{posts.id}} [板块：{{posts.section}}] {{posts.title}}</p>
-						<p> <img src="/static/avatars/{{posts.avatar}}.jpg" width="30px" height="auto">{{posts.poster}}
-							{{posts.post_time}}</p>
-					</h3>
-				</div>
-				<div class="panel-body">
-
-					<p>{%if posts.withpic %}
-						<img src="/static/uploads/{{posts.id}}.png" height="100px" width="auto">
-						{% endif %}{{posts.content}}</p>
-				</div>
+					<p> <img src="/static/avatars/{{posts.avatar}}.jpg" width="30px" height="auto">{{posts.poster}}
+						{{posts.post_time}}</p>
+				</h3>
 			</div>
+			<div class="panel-body">
+
+				<p>{%if posts.withpic %}
+					<img src="/static/uploads/{{posts.id}}.png" height="100px" width="auto">
+					{% endif %}{{posts.content}}</p>
+			</div>
+		</div>
 
 
 		</a>
