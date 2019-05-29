@@ -66,12 +66,12 @@ class posts(db.Model):
 
 
 def checklogin():
-    if session.get('username') != None:
+    if session.get('account') != None:
         return False#已登陆
     return True#未登陆
 def checkkookie():
-    username = session.get('username')
-    if User.query.filter(User.username==username).first().kookies != '00000000':
+    email = session.get('account')
+    if User.query.filter(User.email==email).first().kookies != '00000000':
         return False#已有有效kookie
     return True#没有有效kookie
 
@@ -170,7 +170,7 @@ def comment(post_id):
                 while next_id != 0:
                     temp = posts.query.filter(posts.id==next_id).first().next
                     if temp == 0:
-                        break;
+                        break
                     else:
                         next_id = temp
                 if posts.query.filter(posts.id==post_id).first().next==0:
@@ -209,7 +209,7 @@ def comment(post_id):
                 while next_id != 0:
                     temp = posts.query.filter(posts.id==next_id).first().next
                     if temp == 0:
-                        break;
+                        break
                     else:
                         next_id = temp
                 if posts.query.filter(posts.id==post_id).first().next==0:
@@ -238,7 +238,7 @@ def viewpost(id):#id是headpost的主键
     form = comment_form()
     allposts = []
     next_id=0
-    result=User.query.filter(User.kookies==session.get('kookies')).first()
+    result=User.query.filter(User.email==session.get('account')).first()
     post = posts.query.filter(posts.id==id).first()
     if post == None:
         return return404()
@@ -251,7 +251,7 @@ def viewpost(id):#id是headpost的主键
         allposts.append(nextpost)
         next_id = nextpost.next
 
-    return render_template('viewpost.html',form=form,post=post,allposts=allposts,len_of_all_posts = len(allposts),result=result,loginform=loginform(),signinform=signinform())
+    return render_template('view/viewpost.html',form=form,post=post,allposts=allposts,len_of_all_posts = len(allposts),result=result,loginform=loginform(),signinform=signinform())
 
 
 @app.route('/changeavatar/<avtid>',methods=['GET','POST'])
@@ -279,9 +279,8 @@ def changeavt(avtid):
 def newkookie():
     if checklogin():
         return redirect(url_for('home',nologin=1))
-    username = session.get('username')
     account = session.get('account')
-    kookie = cookie(username)
+    kookie = cookie(User.query.filter(User.email==account).first().username)
     result = User.query.filter(User.email == account).update({'kookies': kookie})
     try:
         db.session.commit()
@@ -290,6 +289,7 @@ def newkookie():
             oldkookie += kookie
             User.query.filter(User.email==account).update({'oldkookies':oldkookie})#保存历史kookie
             db.session.commit()
+            session['kookie'] = kookie#s设置新kookie
         except Exception as e:
             db.session.rollback()
             print(e)
@@ -298,41 +298,33 @@ def newkookie():
         db.session.rollback()
         print(e)
         return return500()
-    return redirect(url_for('homepage'))
+    return redirect(request.referrer)
 
 
 @app.route('/home',methods=['GET','POST'])
 def homepage():
     if checklogin():
         return redirect(url_for('home',nologin=1))
-    username=session.get('username')
-    result = User.query.filter(User.username == username).first()
+    email=session.get('account')
+    result = User.query.filter(User.email == email).first()
     if result==None:
         return redirect(url_for('home',nologin=1))
-    session['account'] = result.email
     session['kookie'] = result.kookies
     allposts = posts.query.filter(posts.head==True).order_by(-posts.post_time).all()
-    return render_template('portal.html',result=result,newpostform=new_post_form(),\
+    return render_template('view/home.html',result=result,newpostform=new_post_form(),\
                            allposts = allposts,section='时间线')
-@app.route('/test',methods=['GET','POST'])
-def test():
-    tenposts = posts.query.filter(posts.head==True).order_by(-posts.post_time).all()
-    return render_template('view/portal.html',tenposts=tenposts,userip = request.remote_addr,datetime=datetime.datetime.now(),\
-        loginform=loginform(),signinform=signinform())
 
 
 @app.route('/section/<section_name>',methods=['GET','POST'])
 def viewsection(section_name):
     if checklogin():
         return redirect(url_for('home',nologin=1))
-    username=session.get('username')
-    result = User.query.filter(User.username == username).first()
+    email=session.get('account')
+    result = User.query.filter(User.email == email).first()
     if result==None:
         return redirect(url_for('home',nologin=1))
-    session['account'] = result.email
-    session['kookie'] = result.kookies
     relposts = posts.query.filter(posts.section == section_name).filter(posts.head==True).order_by(-posts.post_time).all()
-    return render_template('portal.html',result=result,newpostform=new_post_form(),\
+    return render_template('view/home.html',result=result,newpostform=new_post_form(),\
                            allposts = relposts,section=section_name)
 
 
@@ -348,14 +340,14 @@ def login():
         return return500()
     form = loginform()
     if form.validate_on_submit():
-        username = form.name.data#其实是email
+        email = form.name.data#其实是email
         password = form.password.data
         #print(username,password)
-        result = User.query.filter(User.email==username).first()
+        result = User.query.filter(User.email==email).first()#唯一辨识符
         if result == None:
             return redirect(url_for('home',err=1))
         elif result.password == password:
-            session['username']=result.username
+            session['account']=result.email
             session['kookies']=result.kookies
             session['avatar']=result.avatar
             return redirect(url_for('homepage'))
@@ -374,7 +366,7 @@ def signin():
         psw1 = form.password1.data
         psw2 = form.password2.data
         email = form.email.data
-        print(username, psw1, email)
+        #print(username, psw1, email)
         if psw1 != psw2:
             print('密码与确认密码不同')
             return redirect(url_for('home',err=1))
@@ -382,7 +374,7 @@ def signin():
             newuser = User(username=username,password=psw1,email=email,password_hash=md5(psw1),confirmed=False,admin=False)
             db.session.add(newuser)
             db.session.commit()
-            session['username']=username
+            session['account']=email
             session['kookies']='00000000'
             return redirect(url_for('homepage'))
         except Exception as e:
