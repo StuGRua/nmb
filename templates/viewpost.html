@@ -10,13 +10,13 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
-<body>
+<body style="margin-top:60px">
 
 	<div class="container container-fluid">
 
 
 
-		<nav class="navbar navbar-default fixed-top navbar-light bg-faded" role="navigation">
+		<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
 
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle" data-toggle="collapse"
@@ -235,18 +235,25 @@
 	</div>
 
 	{% endfor %}
-
+	{% if result %}
+	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+		<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal2">
+			+
+		</button>
+	</div>
+	{% endif %}
+	{% if not result %}
+	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+		<h5><p>登陆以评论/回复</p></h5>
+	</div>
+	{% endif %}
 	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 		<h1><a href="/home">返回主页</a></h1>
 	</div>
 
 
 
-	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-		<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal2">
-			+
-		</button>
-	</div>
+	
 
 
 
