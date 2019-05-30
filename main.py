@@ -38,6 +38,7 @@ class User(db.Model):
         self.confirmed = confirmed
         self.avatar = avatar
         self.oldkookies = '#'
+#待增加验证登陆时专门的密码验证加密方式，前端向后端发起ajax请求，后端返回salt，前端加密提交数据与后端比对
 #待增加注册时间记录
 class posts(db.Model):
     __tablename__='posts'

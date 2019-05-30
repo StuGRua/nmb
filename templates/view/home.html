@@ -20,7 +20,7 @@
 	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 
-<body style="margin-top:60px">
+<body style="margin-top:0px">
 	<div class="container-fluid">
 		<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
 
@@ -32,7 +32,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="/home">To-be-decided</a>
+				<a class="navbar-brand" href="/home">错位 丨 Misplace</a>
 			</div>
 			<div class="collapse navbar-collapse" id="example-navbar-collapse">
 				<ul class="nav navbar-nav">
@@ -46,14 +46,10 @@
 							<li><a href="/home">时间线</a></li>
 							<li><a href="/section/main">综合</a></li>
 							<li><a href="/section/形势与政策">形势与政策</a></li>
+							<li><a href="/section/问询">问询</a></li>
 							<li><a href="/section/other">其他</a></li>
-							<li><a href="/section/test">其他的其他</a></li>
 						</ul>
 					</li>
-					<!--
-			<li class="nav-item">
-				<a class="nav-link">用户名：{{result.username}}</a>
-			</li>-->
 					<li class="nav-item dropdown">
 						<a class="nav-link" href="#" class="dropdown-toggle" data-toggle="dropdown">
 							饼干：{{result.kookies}}
@@ -79,6 +75,10 @@
 					</li>
 					<li class="nav-item">
 						<a class="nav-link">{{result.email}}</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#" data-toggle="modal" data-target="#myModal3">NEW<b class="caret"></b>
+						</a>
 					</li>
 					<li class="nav-item dropdown">
 						<a class="nav-link" href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -162,9 +162,11 @@
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal -->
 	</div>
+	<!--
 	<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal3">
 		NEW
 	</button>
+	-->
 	<!-- 模态框（Modal） -->
 	<div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
@@ -251,7 +253,7 @@
 
 					<p>{%if posts.withpic %}
 						<img src="/static/uploads/{{posts.id}}.png" height="100px" width="auto">
-						{% endif %}{{posts.content}}</p>
+						{% endif %}{% if posts.content[97] %}{{posts.content[0:97]}}...{% endif %}{% if not posts.content[97] %}{{posts.content}}{% endif %}</p>
 				</div>
 			</div>
 

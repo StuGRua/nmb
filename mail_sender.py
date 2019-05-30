@@ -1,12 +1,13 @@
 import smtplib
 from email.mime.text import MIMEText
 def sender(msg_to,send_info):
-    msg_from='2889205153@qq.com'                                 #发送方邮箱
+    msg_from='2889205153@qq.com' #发送方邮箱
     passwd='cnwpouojpobvdccg'                                   #填入发送方邮箱的授权码
     msg_to=msg_to                                  #收件人邮
-
-    subject="确认邮件" 
-    content='请点击此链接以确认激活账号'+send_info
+    
+    subject="\'错位 丨 Misplace\'的账号注册确认邮件" 
+    content='以下是您的确认链接：\n'+send_info+'\n请点击此链接以确认激活账号\n如果不是本人操作，请忽略本邮件\n'
+    #content = render_template('mail/confirmation.html',send_info=send_info)
     msg = MIMEText(content)
     msg['Subject'] = subject
     msg['From'] = msg_from
@@ -21,4 +22,4 @@ def sender(msg_to,send_info):
     finally:
         s.quit()
 if __name__ == "__main__":
-    exit(0)
+    sender('2889205153@qq.com','th2is link')
