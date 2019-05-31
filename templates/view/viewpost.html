@@ -41,6 +41,7 @@
 							<li><a href="/section/main">综合</a></li>
 							<li><a href="/section/形势与政策">形势与政策</a></li>
 							<li><a href="/section/问询">问询</a></li>
+							<li><a href="/section/深夜">深夜</a></li>
 							<li><a href="/section/other">其他</a></li>
 						</ul>
 					</li>
@@ -228,6 +229,8 @@
 				<p>{%if post.withpic %}
 					<img src="/static/uploads/{{post.id}}.png" height="100px" width="auto">
 					{% endif %}{{post.content}}</p>
+					<a id="{{post.id}}" class="nav-link" href="#" data-toggle="modal" data-target="#myModal2">回复<b class="caret"></b><!--这里要做成能够按下链接后在textarea里面自动填充>>+回复的POST ID-->
+					</a>
 			</div>
 		</div>
 	</div>
