@@ -119,14 +119,7 @@ def home():
     tenposts = posts.query.filter(posts.head==True).order_by(-posts.post_time).all()
     return render_template('view/portal.html',tenposts=tenposts,userip = request.remote_addr,datetime=datetime.datetime.now(),\
         loginform=loginform(),signinform=signinform(),nologin=str(nologin))
-'''
-def getpic():
-    pic = request.files.get('pic')
-    if pic != None:#先检查文件类型
-        suffix = pic.filename.split('.')[-1]
-        if suffix != 'jpg' or 'png' or 'gif':
-            return 0
-        picname'''
+
 @app.route('/new',methods=['POST'])
 def newpost():
     if checklogin():
@@ -145,7 +138,7 @@ def newpost():
             picname = pic.filename.split('.')
             suffix = picname[-1].lower().strip()
             if not (suffix=='gif' or suffix=='jpg' or suffix=='png'):
-                print('weeeeeeeeee')
+                #print('weeeeeeeeee')
                 pic = None#图不对就不要
         if pic != None:#有图
             post = posts(poster=session.get('kookie'),head=True,next=0,title=title,content=content,section=section,withpic=True)
@@ -174,7 +167,7 @@ def newpost():
                 #return redirect(url_for('home'))
                 return return500()
         else:#没图
-            print('没图')
+            #print('没图')
             post = posts(poster=session.get('kookie'),head=True,next=0,title=title,content=content,section=section,withpic=False)
             try:
                 db.session.add(post)
@@ -184,10 +177,10 @@ def newpost():
                 db.session.rollback()
                 print(e)
                 #return redirect(url_for('home'))
-                return return500()
+                return return500('db error')
     else:
-        print('no validate====================')
-        return return500()
+        #print('no validate====================')
+        return return500('no validate')
 @app.route('/comment/<post_id>',methods=['POST'])
 def comment(post_id):
     #print(post_id)#id:给【ID】这个串评论
@@ -206,12 +199,12 @@ def comment(post_id):
             picname = pic.filename.split('.')
             print(picname)
             suffix = picname[-1].lower().strip()
-            print(suffix)
+            #print(suffix)
             if not (suffix=='gif' or suffix=='jpg' or suffix=='png'):
-                print('weeeeeeeeee')
+                #print('weeeeeeeeee')
                 pic = None#图不对就不要
         if pic !=None:
-            print('we have pic')
+            #print('we have pic')
             section = posts.query.filter(posts.id==post_id).first().section
             post = posts(poster=session.get('kookie'),head=False,next=0,title=identifier,content=content,section=section,withpic=True)
             try:
@@ -237,11 +230,11 @@ def comment(post_id):
                     db.session.rollback()
                     print(e)
                     return return500()
-                print('=============================')
+                #print('=============================')
                 ider = posts.query.filter(posts.ider==md5(content+str(int(time.time())))).first().id
-                print('----------------------',ider)
+                #print('----------------------',ider)
                 try:
-                    print(ider,'we have pic here')
+                    #print(ider,'we have pic here')
                     suffix = pic.filename.split('.')[-1]
                     route = 'static/uploads/'+str(ider)+'.'+suffix
                     pic.save(route) #图片名就是POST ID
@@ -291,8 +284,8 @@ def comment(post_id):
                 print(e)
                 return return500()
     else:
-        print('no validate====================')
-        return return500()
+        #print('no validate====================')
+        return return500('no validate')
 
 
     return redirect(request.referrer)
@@ -379,7 +372,7 @@ def homepage():
     session['kookie'] = result.kookies
     allposts = posts.query.filter(posts.head==True).order_by(-posts.post_time).all()
     return render_template('view/home.html',result=result,newpostform=new_post_form(),\
-                           allposts = allposts,section='时间线')
+                           allposts = allposts,section='时间线',no_confirmation=request.values.get('no_confirmation'),nokookie = request.values.get('nokookie'))
 
 
 @app.route('/section/<section_name>',methods=['GET','POST'])

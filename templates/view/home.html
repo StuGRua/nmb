@@ -9,7 +9,7 @@
 
 	<!-- Bootstrap CSS -->
 	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-
+	<link href="/static/css/newnavbar.css" rel="stylesheet">
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 	<!--[if lt IE 9]>
@@ -18,6 +18,13 @@
         <![endif]-->
 	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
 	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	{% if no_confirmation == '1'%}
+	<script>alert('未通过邮件确认!');</script>
+	{% endif %}
+	{% if nokookie == '1'%}
+	<script>alert('未获得有效kookie!');</script>
+	{% endif %}
+
 </head>
 
 <body style="margin-top:0px">
