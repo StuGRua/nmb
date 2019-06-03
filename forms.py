@@ -20,7 +20,7 @@ class signinform(FlaskForm):
 class new_post_form(FlaskForm):
     title = StringField('标题',validators=[DataRequired()])
     content = TextAreaField('内容',validators=[DataRequired()])
-    section = SelectField('分区',validators=[DataRequired()],choices=[('main','综合'),('形势与政策','形势与政策'),('问询','问询'),('other','其他，待确定')],default='main')#coerce=int
+    section = SelectField('分区',validators=[DataRequired()],choices=[('综合','综合'),('校内','校内'),('形势与政策','形势与政策'),('问询','问询'),('深夜','深夜'),('其他','其他'),('反馈','反馈')],default='main')#coerce=int
     submit = SubmitField('提交')
 class comment_form(FlaskForm):
     content = TextAreaField('内容',validators=[DataRequired()])

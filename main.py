@@ -22,7 +22,8 @@ class User(db.Model):
     password = db.Column(db.String(40), nullable=True)
     email = db.Column(db.String(80), nullable=True, unique=True)
     create_time = db.Column(db.DateTime,nullable=True)#注册时间
-    active_time = db.Column(db.DateTime,nullable=True)
+    active_time = db.Column(db.DateTime,nullable=True)#上次活动时间
+    active_ip = db.Column(db.String(50),nullable=True)
     #role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     password_hash = db.Column(db.String(256), nullable=True)
     password_cmp = db.Column(db.String(50),nullable=True)#用于登陆时比对
@@ -32,12 +33,14 @@ class User(db.Model):
     avatar = db.Column(db.Integer,default=0)
     oldkookies = db.Column(db.Text,nullable=True)
     fav_color = db.Column(db.String(10),nullable=True,default='000000')#用的是RGB标识
-    def __init__(self,username,password,email,password_hash,confirmed=False,kookies='00000000',admin=False,avatar=0,fav_color='000000'):
+    cited = db.Column(db.Text,nullable=True)
+    def __init__(self,username,password,email,active_ip,password_hash,confirmed=False,kookies='00000000',admin=False,avatar=0,fav_color='000000',cited=''):
         self.username = username
         self.password = password
         self.email = email
         self.create_time = datetime.datetime.now()
         self.active_time = datetime.datetime.now()
+        self.active_ip = active_ip
         self.password_hash = password_hash
         self.password_cmp = md5(password)
         self.kookies = kookies
@@ -46,13 +49,13 @@ class User(db.Model):
         self.avatar = avatar
         self.oldkookies = '#'
         self.fav_color = fav_color
+        self.cited = cited
 #待增加验证登陆时专门的密码验证加密方式，前端向后端发起ajax请求，后端返回salt，前端加密提交数据与后端比对
-#待增加注册时间记录
-#增加fav_color
 class posts(db.Model):
     __tablename__='posts'
     id = db.Column(db.Integer, primary_key=True,unique=True)#主键，辨识
     poster = db.Column(db.String(10),nullable=True)#发布者的kookie
+    poster_ip = db.Column(db.String(50),nullable=True)
     head = db.Column(db.Boolean,default=False)#是否是第一条
     next = db.Column(db.Integer,nullable=True,default=0)#下一条
     post_time = db.Column(db.DateTime,nullable=True)#生成时间
@@ -61,11 +64,13 @@ class posts(db.Model):
     section = db.Column(db.String(40),nullable=True,default='main')#板块
     avatar = db.Column(db.Integer,default=0)
     withpic = db.Column(db.Boolean,default=False)
-    pic_route = db.Column(db.String(30),nullable=True)
+    pic_route = db.Column(db.String(100),nullable=True)
     ider = db.Column(db.String(256),nullable=True)#唯一识别符，用来反查主键
     replies = db.Column(db.Integer,nullable=True)#head=True的post的回复数，回复+=1
-    def __init__(self,poster,head,next,title,content,section='main',withpic=False,pic_route='null',replies=0):
+    topped = db.Column(db.Boolean,default=False)
+    def __init__(self,poster,poster_ip,head,next,title,content,section='main',withpic=False,pic_route='null',replies=0,topped=False):
         self.poster = poster
+        self.poster_ip = poster_ip
         self.head = head
         self.next = next
         self.avatar = User.query.filter(User.kookies==poster).first().avatar
@@ -77,6 +82,7 @@ class posts(db.Model):
         self.pic_route = pic_route
         self.ider = md5(content+str(int(time.time())))
         self.replies = replies
+        self.topped = topped
 #增加replies属性，用于head=True的统计
 
 def checklogin():
@@ -96,11 +102,13 @@ def check_confirmation():
 
 @app.route('/api/<kw>')
 def api(kw):
-    print(kw)
+    #print(kw)  
     if kw == 'timestamp':
         return str(int((time.time())))
     if kw == 'datetime':
         return str(datetime.datetime.now())
+    if kw == 'harmony':
+        return render_template('test/index.html')
     if kw == 'confirmation':
         psw_pash = request.values.get('code')#现在确认码是密码HASH
         User.query.filter(User.password_hash==psw_pash).update({'confirmed':True})
@@ -116,17 +124,11 @@ def api(kw):
 @app.route('/',methods=['GET','POST'])
 def home():
     nologin = request.values.get('nologin')
+    topped_posts = posts.query.filter(posts.topped==True).order_by(-posts.post_time).all()
     tenposts = posts.query.filter(posts.head==True).order_by(-posts.post_time).all()
-    return render_template('view/portal.html',tenposts=tenposts,userip = request.remote_addr,datetime=datetime.datetime.now(),\
+    return render_template('view/portal.html',topped_posts = topped_posts,tenposts=tenposts,userip = request.remote_addr,datetime=datetime.datetime.now(),\
         loginform=loginform(),signinform=signinform(),nologin=str(nologin))
-'''
-def getpic():
-    pic = request.files.get('pic')
-    if pic != None:#先检查文件类型
-        suffix = pic.filename.split('.')[-1]
-        if suffix != 'jpg' or 'png' or 'gif':
-            return 0
-        picname'''
+
 @app.route('/new',methods=['POST'])
 def newpost():
     if checklogin():
@@ -143,18 +145,27 @@ def newpost():
         pic = request.files.get('pic')
         if pic != None:#先判断图的后缀是不是要的
             picname = pic.filename.split('.')
-            suffix = picname[-1]
-            if suffix != 'jpg' and 'png':
+            suffix = picname[-1].lower().strip()
+            if not (suffix=='gif' or suffix=='jpg' or suffix=='png' or suffix == 'jpeg'):
+                #print('weeeeeeeeee')
                 pic = None#图不对就不要
         if pic != None:#有图
-            post = posts(poster=session.get('kookie'),head=True,next=0,title=title,content=content,section=section,withpic=True)
+            post = posts(poster=session.get('kookie'),poster_ip=request.remote_addr,head=True,next=0,title=title,content=content,section=section,withpic=True)
             try:
                 db.session.add(post)
                 db.session.commit()
                 ider = posts.query.filter(posts.ider==md5(content+str(int(time.time())))).first().id
                 try:
                     print(ider,'we have pic here')
-                    pic.save('static/uploads/'+ str(ider)+'.png')#图片名就是POST ID
+                    suffix = pic.filename.split('.')[-1]
+                    route = 'static/uploads/'+str(ider)+'.'+suffix
+                    pic.save(route) #图片名就是POST ID
+                    try:
+                        posts.query.filter(posts.id == ider).update({'pic_route':route})
+                        db.session.commit()
+                    except Exception as e:
+                        print(e)
+                        return return500('保存图片路径或保存图时出错')
                     #print('file saved', filename)
                 except Exception as e:
                     print(e)
@@ -165,8 +176,8 @@ def newpost():
                 #return redirect(url_for('home'))
                 return return500()
         else:#没图
-            print('we went here?')
-            post = posts(poster=session.get('kookie'),head=True,next=0,title=title,content=content,section=section,withpic=False)
+            #print('没图')
+            post = posts(poster=session.get('kookie'),poster_ip=request.remote_addr,head=True,next=0,title=title,content=content,section=section,withpic=False)
             try:
                 db.session.add(post)
                 db.session.commit()
@@ -175,10 +186,10 @@ def newpost():
                 db.session.rollback()
                 print(e)
                 #return redirect(url_for('home'))
-                return return500()
+                return return500('db error')
     else:
-        print('no validate====================')
-        return return500()
+        #print('no validate====================')
+        return return500('no validate')
 @app.route('/comment/<post_id>',methods=['POST'])
 def comment(post_id):
     #print(post_id)#id:给【ID】这个串评论
@@ -195,13 +206,16 @@ def comment(post_id):
         pic = request.files.get('pic')
         if pic != None:#先判断图的后缀是不是要的
             picname = pic.filename.split('.')
-            suffix = picname[-1]
-            if suffix != 'jpg' and 'png':
+            print(picname)
+            suffix = picname[-1].lower().strip()
+            #print(suffix)
+            if not (suffix=='gif' or suffix=='jpg' or suffix=='png' or suffix == 'jpeg'):
+                #print('weeeeeeeeee')
                 pic = None#图不对就不要
         if pic !=None:
-            print('we have pic')
+            #print('we have pic')
             section = posts.query.filter(posts.id==post_id).first().section
-            post = posts(poster=session.get('kookie'),head=False,next=0,title=identifier,content=content,section=section,withpic=True)
+            post = posts(poster=session.get('kookie'),poster_ip=request.remote_addr,head=False,next=0,title=identifier,content=content,section=section,withpic=True)
             try:
                 db.session.add(post)
                 db.session.commit()
@@ -225,14 +239,21 @@ def comment(post_id):
                     db.session.rollback()
                     print(e)
                     return return500()
-                print('=============================')
+                #print('=============================')
                 ider = posts.query.filter(posts.ider==md5(content+str(int(time.time())))).first().id
-                print('----------------------',ider)
+                #print('----------------------',ider)
                 try:
-                    print(ider,'we have pic here')
-                    pic.save('static/uploads/'+ str(ider)+'.png')#图片名就是POST ID
+                    #print(ider,'we have pic here')
+                    suffix = pic.filename.split('.')[-1]
+                    route = 'static/uploads/'+str(ider)+'.'+suffix
+                    pic.save(route) #图片名就是POST ID
+                    try:
+                        posts.query.filter(posts.id == ider).update({'pic_route':route})
+                        db.session.commit()    
+                    except Exception as e:
+                        print(e)
+                        return return500('保存图片路径或保存图时出错')
                     #print('file saved', filename)
-                    print('comment with pic ok')
                 except Exception as e:
                     print(e)
                     return redirect(request.referrer)
@@ -242,7 +263,7 @@ def comment(post_id):
                 return return500()
         else:
             section = posts.query.filter(posts.id==post_id).first().section
-            post = posts(poster=session.get('kookie'),head=False,next=0,title=identifier,content=content,section=section,withpic=False)
+            post = posts(poster=session.get('kookie'),poster_ip=request.remote_addr,head=False,next=0,title=identifier,content=content,section=section,withpic=False)
             try:
                 db.session.add(post)
                 db.session.commit()
@@ -272,8 +293,8 @@ def comment(post_id):
                 print(e)
                 return return500()
     else:
-        print('no validate====================')
-        return return500()
+        #print('no validate====================')
+        return return500('no validate')
 
 
     return redirect(request.referrer)
@@ -287,7 +308,6 @@ def viewpost(id):#id是headpost的主键
     if post == None:
         return return404()
     posterkookie = post.poster
-    #posteravatar = User.query.filter(User.kookies == posterkookie).first().avatar
     allposts.append(post)#将一楼加至list
     next_id = post.next#每一楼的id
     while next_id !=0:
@@ -353,14 +373,18 @@ def newkookie():
 def homepage():
     if checklogin():
         return redirect(url_for('home',nologin=1))
+    nokookie=None
     email=session.get('account')
+    topped_posts = posts.query.filter(posts.topped==True).order_by(-posts.post_time).all()
     result = User.query.filter(User.email == email).first()
     if result==None:
         return redirect(url_for('home',nologin=1))
     session['kookie'] = result.kookies
+    if result.kookies == '00000000':
+        nokookie=1
     allposts = posts.query.filter(posts.head==True).order_by(-posts.post_time).all()
     return render_template('view/home.html',result=result,newpostform=new_post_form(),\
-                           allposts = allposts,section='时间线')
+                           allposts = allposts,topped_posts=topped_posts,section='时间线',no_confirmation=request.values.get('no_confirmation'),nokookie = nokookie)
 
 
 @app.route('/section/<section_name>',methods=['GET','POST'])
@@ -398,6 +422,12 @@ def login():
             session['account']=result.email
             session['kookies']=result.kookies
             session['avatar']=result.avatar
+            active_ip=request.remote_addr
+            User.query.filter(User.email==email).update({'active_ip':active_ip})
+            try:
+                db.session.commit()
+            except Exception as e:
+                print(e)
             return redirect(url_for('homepage'))
         else:
             return redirect(url_for('home',err=1))
@@ -419,7 +449,7 @@ def signin():
             print('密码与确认密码不同')
             return redirect(url_for('home',err=1))
         try:
-            newuser = User(username=username,password=psw1,email=email,password_hash=md5(psw1),confirmed=False,admin=False)
+            newuser = User(username=username,password=psw1,email=email,active_ip=request.remote_addr,password_hash=md5(psw1),confirmed=False,admin=False)
             db.session.add(newuser)
             db.session.commit()
             session['account']=email

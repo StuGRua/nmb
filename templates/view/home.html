@@ -9,7 +9,8 @@
 
 	<!-- Bootstrap CSS -->
 	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-
+	<link href="/static/css/newnavbar.css" rel="stylesheet">
+	<link type="text/css" href="/static/css/harmony.css"rel="stylesheet">
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 	<!--[if lt IE 9]>
@@ -18,8 +19,29 @@
         <![endif]-->
 	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
 	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-</head>
+	{% if no_confirmation == '1'%}
+	<script>alert('未通过邮件确认!');</script>
+	{% endif %}
+	<script>
+		function checkKookie(){
+			if({{nokookie}}==1){
+			alert('未获得有效饼干,将不能有效发帖.请点击导航栏左侧获取饼干或咨询管理员.');
+			$("#makeNew").removeAttr("data-target");
+			}
+			}
+		function encoderOn(){
+				$("#encoderFrame").attr("width","400px");
+				$("#encoderFrame").attr("height","200px");
+				$("#encoderFrame").attr("frameborder","1");
+			}
+		function encoderOff(){
+				$("#encoderFrame").attr("width","0px");
+				$("#encoderFrame").attr("height","0px");
+				$("#encoderFrame").attr("frameborder","0");
+			}
+	</script>
 
+</head>
 <body style="margin-top:0px">
 	<div class="container-fluid">
 		<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -44,11 +66,13 @@
 						</a>
 						<ul class="dropdown-menu">
 							<li><a href="/home">时间线</a></li>
-							<li><a href="/section/main">综合</a></li>
+							<li><a href="/section/综合">综合</a></li>
+							<li><a href="/section/校内">校内</a></li>
 							<li><a href="/section/形势与政策">形势与政策</a></li>
 							<li><a href="/section/问询">问询</a></li>
 							<li><a href="/section/深夜">深夜</a></li>
-							<li><a href="/section/other">其他</a></li>
+							<li><a href="/section/其他">其他</a></li>
+							<li><a href="/section/反馈">反馈</a></li>
 						</ul>
 					</li>
 					<li class="nav-item dropdown">
@@ -58,17 +82,13 @@
 						</a>
 						<ul class="dropdown-menu">
 							<li>
-								<!--
-						<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal2">
-							获取新饼干
-						</button>-->
 								<a href="/newkookie">获取新饼干</a>
 							</li>
 						</ul>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="#" class="dropdown-toggle" data-toggle="modal" data-target="#myModal"
-							style="padding-top:0;padding-bottom:0;"><img src="\static/avatars/{{result.avatar}}.jpg"
+							style="padding-top:5px;padding-bottom:0;"><img src="\static/avatars/{{result.avatar}}.jpg"
 								height="auto" width="50px">
 							<b class="caret"></b>
 						</a>
@@ -78,7 +98,7 @@
 						<a class="nav-link">{{result.email}}</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="#" data-toggle="modal" data-target="#myModal3">NEW<b class="caret"></b>
+						<a class="nav-link" id="makeNew" href="#" data-toggle="modal" data-target="#myModal3" onclick="checkKookie()">NEW<b class="caret"></b>
 						</a>
 					</li>
 					<li class="nav-item dropdown">
@@ -96,10 +116,7 @@
 			</div>
 	</div>
 	</nav>
-	<!--
-<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-	更改头像
-</button>-->
+
 	<!-- 模态框（Modal） -->
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
@@ -127,11 +144,7 @@
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal -->
 	</div>
-	<!--
-<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal2">
-	获取新饼干
-</button>
--->
+	
 	<!-- 模态框（Modal） -->
 	<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
@@ -154,20 +167,11 @@
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭
 					</button>
-					<!--
-				<button type="button" class="btn btn-primary">
-					提交更改
-				</button>
-				-->
 				</div>
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal -->
 	</div>
-	<!--
-	<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal3">
-		NEW
-	</button>
-	-->
+
 	<!-- 模态框（Modal） -->
 	<div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
@@ -184,30 +188,34 @@
 					<form action="/new" method="post" enctype="multipart/form-data">
 						{{newpostform.csrf_token }}
 						{{newpostform.title.label}} {{newpostform.title}}<br>
-						{{newpostform.content.label}} {{newpostform.content}}
+						{{newpostform.content.label}} {{newpostform.content(id="post_content")}}
 						{{newpostform.section.label}} {{newpostform.section}}<br>
 						<div class="form-group col-sm-6">
 							<input type="file" name="pic" class="form-control btn-info">
 						</div>
 						{{newpostform.submit}}
 					</form>
+				
+				<iframe src="/api/harmony" width="0px" height="0px" frameborder="0" id="encoderFrame">
+				</iframe>
+<script>function copyToText(){
+	var a = document.getElementById('encoderFrame').contentWindow.document.getElementById('encoded-area').value;
+	alert(a);
+	document.getElementById("post_content").value=a;
+}
+</script>
 				</div>
+
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">关闭
-					</button>
-					<!--
-				<button type="button" class="btn btn-primary">
-					提交更改
-				</button>
-				-->
+					<button type="button" class="btn btn-default" onclick="encoderOn()">打开编码器</button>
+					<button type="button" class="btn btn-default" onclick="encoderOff()">关闭编码器</button>
+					<button type="button" class="btn btn-default" onclick="copyToText()"><strong>覆盖</strong>编码后的文本到输入框</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭	</button>
 				</div>
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal -->
 	</div>
-	<!--
-<button class="btn btn-warning btn-lg" data-toggle="modal" data-target="#myModal4">
-	OUT
-</button>-->
+
 	<!-- 模态框（Modal） -->
 	<div class="modal fade" id="myModal4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
@@ -236,6 +244,38 @@
 		</div><!-- /.modal -->
 	</div>
 	<br>
+	{% for posts in topped_posts %}
+		<hr>
+
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<a href="/viewpost/{{posts.id}}">
+				<div class="panel panel-default">
+					<div class="panel-heading" style="background-color:#DCDCDC">
+
+						<h3 class="panel-title">
+
+							<p>【置顶】ID:{{posts.id}} [板块：{{posts.section}}] {{posts.title}}[回复数：{{posts.replies}}]</p>
+
+
+							<p> <img src="/static/avatars/{{posts.avatar}}.jpg" width="30px"
+									height="auto">{{posts.poster}}
+								{{posts.post_time}}</p>
+						</h3>
+					</div>
+					<div class="panel-body">
+
+						<p>{%if posts.withpic %}
+							<img src="/{{posts.pic_route}}" height="100px" width="auto">
+							{% endif %}{{posts.content[0:100]}}</p>
+					</div>
+				</div>
+
+			</a>
+
+		</div>
+
+
+		{% endfor %}
 	{% for posts in allposts %}
 	<hr>
 
@@ -253,7 +293,7 @@
 				<div class="panel-body">
 
 					<p>{%if posts.withpic %}
-						<img src="/static/uploads/{{posts.id}}.png" height="100px" width="auto">
+						<img src="/{{posts.pic_route}}" height="100px" width="auto">
 						{% endif %}{% if posts.content[97] %}{{posts.content[0:97]}}...{% endif %}{% if not posts.content[97] %}{{posts.content}}{% endif %}</p>
 				</div>
 			</div>
@@ -264,6 +304,7 @@
 
 
 	{% endfor %}
+	
 </body>
 
 </html>

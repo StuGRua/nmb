@@ -5,6 +5,7 @@
 	<meta charset="utf-8">
 	<title>{{post.title}}</title>
 	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+	<link href="/static/css/newnavbar.css" rel="stylesheet">
 	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
 	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -38,11 +39,13 @@
 						</a>
 						<ul class="dropdown-menu">
 							<li><a href="/home">时间线</a></li>
-							<li><a href="/section/main">综合</a></li>
+							<li><a href="/section/综合">综合</a></li>
+							<li><a href="/section/校内">校内</a></li>
 							<li><a href="/section/形势与政策">形势与政策</a></li>
 							<li><a href="/section/问询">问询</a></li>
 							<li><a href="/section/深夜">深夜</a></li>
-							<li><a href="/section/other">其他</a></li>
+							<li><a href="/section/其他">其他</a></li>
+							<li><a href="/section/反馈">反馈</a></li>
 						</ul>
 					</li>
 					{% if not result %}
@@ -62,10 +65,6 @@
 						</a>
 						<ul class="dropdown-menu">
 							<li>
-								<!--
-							<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal2">
-								获取新饼干
-							</button>-->
 								<a href="/newkookie">获取新饼干</a>
 							</li>
 						</ul>
@@ -227,7 +226,7 @@
 			</div>
 			<div class="panel-body">
 				<p>{%if post.withpic %}
-					<img src="/static/uploads/{{post.id}}.png" height="100px" width="auto">
+					<img src="/{{post.pic_route}}" height="100px" width="auto">
 					{% endif %}{{post.content}}</p>
 					<a id="{{post.id}}" class="nav-link" href="#" data-toggle="modal" data-target="#myModal2">回复<b class="caret"></b><!--这里要做成能够按下链接后在textarea里面自动填充>>+回复的POST ID-->
 					</a>
@@ -251,7 +250,7 @@
 			<div class="panel-body">
 
 				<p>{%if allposts[i].withpic %}
-					<img src="/static/uploads/{{allposts[i].id}}.png" height="200px" width="auto">
+					<img src="/{{allposts[i].pic_route}}" height="200px" width="auto">
 					{% endif %}{{allposts[i].content}}</p>
 						<a id="{{allposts[i].id}}" class="nav-link" href="#" data-toggle="modal" data-target="#myModal2">回复<b class="caret"></b><!--这里要做成能够按下链接后在textarea里面自动填充>>+回复的POST ID-->
 						</a>
@@ -265,13 +264,7 @@
 
 	{% endfor %}
 	{% if result %}
-	<!--
-	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-		<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal2">
-			+
-		</button>
-	</div>
--->
+	
 	{% endif %}
 	{% if not result %}
 	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -306,11 +299,6 @@
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭
 					</button>
-					<!--
-						<button type="button" class="btn btn-primary">
-							提交更改
-						</button>
-						-->
 				</div>
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal -->
