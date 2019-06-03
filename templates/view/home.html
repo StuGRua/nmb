@@ -22,6 +22,7 @@
 	{% if no_confirmation == '1'%}
 	<script>alert('未通过邮件确认!');</script>
 	{% endif %}
+
 	<script>
 		function checkKookie(){
 			if({{nokookie}}==1){
@@ -40,6 +41,7 @@
 				$("#encoderFrame").attr("frameborder","0");
 			}
 	</script>
+
 
 </head>
 <body style="margin-top:0px">

@@ -387,6 +387,7 @@ def homepage():
                            allposts = allposts,topped_posts=topped_posts,section='时间线',no_confirmation=request.values.get('no_confirmation'),nokookie = nokookie)
 
 
+
 @app.route('/section/<section_name>',methods=['GET','POST'])
 def viewsection(section_name):
     if checklogin():
