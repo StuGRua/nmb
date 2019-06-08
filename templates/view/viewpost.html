@@ -5,9 +5,11 @@
 	<meta charset="utf-8">
 	<title>{{post.title}}</title>
 	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
-	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
-	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link href="/static/css/newnavbar.css" rel="stylesheet">
+	<script type="text/javascript" src="/static/js/md5.js"></script>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	
 </head>
 
 <body style="margin-top:60px">
@@ -38,21 +40,23 @@
 						</a>
 						<ul class="dropdown-menu">
 							<li><a href="/home">时间线</a></li>
-							<li><a href="/section/main">综合</a></li>
+							<li><a href="/section/综合">综合</a></li>
+							<li><a href="/section/校内">校内</a></li>
 							<li><a href="/section/形势与政策">形势与政策</a></li>
 							<li><a href="/section/问询">问询</a></li>
 							<li><a href="/section/深夜">深夜</a></li>
-							<li><a href="/section/other">其他</a></li>
+							<li><a href="/section/其他">其他</a></li>
+							<li><a href="/section/反馈">反馈</a></li>
 						</ul>
 					</li>
 					{% if not result %}
 					<li class="nav-item dropdown">
-						<a class="nav-link" href="#" class="dropdown-toggle" data-toggle="modal" data-target="#myModal">
+						<a class="nav-link" href="#" class="dropdown-toggle" data-toggle="modal" data-target="#myModal2">
 							登陆/注册
 							<b class="caret"></b>
 						</a>
 					</li>
-					
+
 					{% endif %}
 					{% if result %}
 					<li class="nav-item dropdown">
@@ -62,10 +66,6 @@
 						</a>
 						<ul class="dropdown-menu">
 							<li>
-								<!--
-							<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal2">
-								获取新饼干
-							</button>-->
 								<a href="/newkookie">获取新饼干</a>
 							</li>
 						</ul>
@@ -80,10 +80,6 @@
 					</li>
 					<li class="nav-item">
 						<a class="nav-link">{{result.email}}</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#" data-toggle="modal" data-target="#myModal3">NEW<b class="caret"></b>
-						</a>
 					</li>
 					<li class="nav-item dropdown">
 						<a class="nav-link" href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -127,7 +123,7 @@
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal -->
 	</div>
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog" style="">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -156,12 +152,12 @@
 							<div class="form-group">
 								<label for="pass" class="col-sm-2 control-label">密码</label>
 								<div class="col-sm-10">
-									{{loginform.password(size=40,type="password",class="form-control",placeholder="请输入密码") }}
+									{{loginform.password(size=40,type="password",id="password1",class="form-control",placeholder="请输入密码") }}
 								</div>
 								<hr>
 								{{ loginform.csrf_token }}
 								<button type="submit" class="btn btn-primary center-block  btn "
-									value="Submit">登陆</button>
+									value="Submit" onclick="enc()">登陆</button>
 							</div>
 						</form>
 					</div>
@@ -201,7 +197,7 @@
 								{{ signinform.csrf_token }}
 								<button type="submit"
 									class="btn btn-primary center-block btn btn-danger"
-									value="Submit" id="res_submit">注册</button>
+									value="Submit" id="res_submit"onclick="enc_all()">注册</button>
 							</div>
 						</form>
 
@@ -220,17 +216,27 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<h3 class="panel-title">
-					<p>ID:{{post.id}} [板块：{{post.section}}] {{post.title}}</p>
+					<p><strong>ID:{{post.id}} [板块：{{post.section}}] {{post.title}}</strong></p>
 					<p> <img src="/static/avatars/{{post.avatar}}.jpg" width="30px" height="auto">{{post.poster}}
-						{{post.post_time}}</p>
+						{{post.post_time}}
+						{% if result.admin %}
+						<a href="/delpost/{{post.id}}">删除</a>
+						{% elif result.kookies == post.poster%}
+						<a href="/delpost/{{post.id}}">删除</a>
+						{% endif %}
+					</p>
 				</h3>
 			</div>
 			<div class="panel-body">
-				<p>{%if post.withpic %}
-					<img src="/{{post.pic_route}}" height="100px" width="auto">
-					{% endif %}{{post.content}}</p>
-					<a id="{{post.id}}" class="nav-link" href="#" data-toggle="modal" data-target="#myModal2">回复<b class="caret"></b><!--这里要做成能够按下链接后在textarea里面自动填充>>+回复的POST ID-->
+				{%if post.withpic %}
+					<p><img src="/{{post.pic_route}}" height="100px" width="auto"></p>
+					{% endif %}
+				<p id="contentMain">{{post.content |safe}}</p>
+					<a id="{{post.id}}" class="nav-link" href="#" data-toggle="modal" data-target="#myModal3" onclick="replyTo({{post.id}})">回复<b class="caret"></b><!--这里要做成能够按下链接后在textarea里面自动填充>>+回复的POST ID-->
 					</a>
+					<iframe src="/api/harmony" width="0px" height="0px" frameborder="0" id="encoderFrame">
+					</iframe>
+					<button type="button" id="switcher1"onclick="headEncoderOn(0)">打开编码器</button>
 			</div>
 		</div>
 	</div>
@@ -245,35 +251,47 @@
 				<h3 class="panel-title">
 					<p> <img src="/static/avatars/{{allposts[i].avatar}}.jpg" width="50px" height="auto"
 							style="">ID:{{allposts[i].id}} {{allposts[i].poster}}
-						{{allposts[i].post_time}}</p>
+						{{allposts[i].post_time}}
+						{% if result.admin %}
+						<a href="/delpost/{{allposts[i].id}}">删除</a>
+						{% elif result.kookies == allposts[i].poster%}
+						<a href="/delpost/{{allposts[i].id}}">删除</a>
+						{% endif %}
+					</p>
 				</h3>
 			</div>
 			<div class="panel-body">
-
 				<p>{%if allposts[i].withpic %}
 					<img src="/{{allposts[i].pic_route}}" height="200px" width="auto">
-					{% endif %}{{allposts[i].content}}</p>
-						<a id="{{allposts[i].id}}" class="nav-link" href="#" data-toggle="modal" data-target="#myModal2">回复<b class="caret"></b><!--这里要做成能够按下链接后在textarea里面自动填充>>+回复的POST ID-->
+					{% endif %}</p>
+				<p id="content{{i}}">{{allposts[i].content | safe}}</p>
+						<a id="{{allposts[i].id}}" class="nav-link" href="#" data-toggle="modal" data-target="#myModal3"onclick="replyTo({{allposts[i].id}})">回复<b class="caret"></b><!--这里要做成能够按下链接后在textarea里面自动填充>>+回复的POST ID-->
 						</a>
+						<iframe src="/api/harmony" width="0px" height="0px" frameborder="0" id="encoderFrame{{i}}">
+						</iframe>
+						<button id="switcher2{{i}}" onclick="encoderOn({{i}})">打开编码器</button>
+
 			</div>
 		</div>
-
-
-
+		
 	</div>
 	</div>
 
 	{% endfor %}
 	{% if result %}
-	<!--
 	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-		<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal2">
-			+
-		</button>
+		<div class="panel panel-default panel-body">
+			<form action="/comment/{{post.id}}" method="post" enctype="multipart/form-data">
+				{{form.csrf_token}}
+				{{form.content.label}} {{form.content(id="reply0",style="height:100px;")}}<br>
+				<div class="form-group col-sm-6">
+					<input type="file" name="pic" class="form-control btn-info" onclick="pic_inserted(0)" id="pic_insertion">
+				</div><br>
+				{{form.submit}}
+			</form>
+		</div>
 	</div>
--->
-	{% endif %}
-	{% if not result %}
+	{% else %}
 	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 		<h5><p>登陆以评论/回复</p></h5>
 	</div>
@@ -282,7 +300,7 @@
 		<h1><a href="/home">返回主页</a></h1>
 	</div>
 	<!-- 模态框（Modal） -->
-	<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -290,15 +308,15 @@
 						&times;
 					</button>
 					<h4 class="modal-title" id="myModalLabel2">
-						++
+						回复
 					</h4>
 				</div>
 				<div class="modal-body">
 					<form action="/comment/{{post.id}}" method="post" enctype="multipart/form-data">
 						{{form.csrf_token}}
-						{{form.content.label}} {{form.content}}<br>
+						{{form.content.label}} {{form.content(id="reply1",style="height:100px;")}}<br>
 						<div class="form-group col-sm-6">
-							<input type="file" name="pic" class="form-control btn-info">
+							<input type="file" name="pic" class="form-control btn-info" onclick="pic_inserted(1)" id="pic_insertion">
 						</div><br>
 						{{form.submit}}
 					</form>
@@ -306,17 +324,100 @@
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭
 					</button>
-					<!--
-						<button type="button" class="btn btn-primary">
-							提交更改
-						</button>
-						-->
 				</div>
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal -->
 	</div>
+
 </body>
+<script>
+	{% if result %}
+	function checkKookie(){
+		//if({{nokookie}}==1){
+		if(1==1){
+		alert('未获得有效饼干,将不能有效发帖.请点击导航栏左侧获取饼干或咨询管理员.');
+		$("#makeNew").removeAttr("data-target");
+		}
+	};
+	{% endif %}
+	function headEncoderOn(id){
+		//alert(id);
+		$("#encoderFrame").attr("width","300px");
+		$("#encoderFrame").attr("height","200px");
+		$("#encoderFrame").attr("frameborder","1");
+		document.getElementById("switcher1").innerHTML = "关闭编码器";
+		$("#switcher1").attr("onclick","headEncoderOff()");
+		//id = "#content"+id;
+		//alert(id);
+		//alert(document.getElementById(id).innerHTML);
+		//var content = 
+		//document.getElementById('encoderFrame').contentWindow.document.getElementById('encoded-area').value = content;
+		}
+	function headEncoderOff(){
+			$("#encoderFrame").attr("width","0px");
+			$("#encoderFrame").attr("height","0px");
+			$("#encoderFrame").attr("frameborder","0");
+			document.getElementById("switcher1").innerHTML = "打开编码器"
+			$("#switcher1").attr("onclick","headEncoderOn()");
+		}
+	function encoderOn(id){
+		//alert(id);
+		$("#encoderFrame"+id).attr("width","300px");
+		$("#encoderFrame"+id).attr("height","200px");
+		$("#encoderFrame"+id).attr("frameborder","1");
+		document.getElementById("switcher2"+id).innerHTML = "关闭编码器";
+		$("#switcher2"+id).attr("onclick","encoderOff("+id+")");
+		//id = "#content"+id;
+		//alert(id);
+		//alert(document.getElementById(id).innerHTML);
+		//var content = 
+		//document.getElementById('encoderFrame').contentWindow.document.getElementById('encoded-area').value = content;
+		}
+	function encoderOff(id){
+			$("#encoderFrame"+id).attr("width","0px");
+			$("#encoderFrame"+id).attr("height","0px");
+			$("#encoderFrame"+id).attr("frameborder","0");
+			document.getElementById("switcher2"+id).innerHTML = "打开编码器"
+			$("#switcher2"+id).attr("onclick","encoderOn("+id+")");
+		}
+	function pic_inserted(id){
+		a = document.getElementById("reply"+id).value;
+		if(a==""){
+			document.getElementById("reply"+id).value="[图片]";
+		}
+	}
+	function replyTo(id){
+		document.getElementById("reply1").value=(">>>"+id+"|||");
+	}
+	function enc(){
+				//alert("123");
+				var password = $("#password1").val();
+				//var password = $(id).val();
+				//alert(password);
+				var passwd = hex_md5(password);//就是我们要的
+				//alert(passwd);
+				document.getElementById("password1").value=passwd;
+			}
+		function enc2(){
+			var password=$("#res_pass").val();
+			var passwd = hex_md5(password);
+			document.getElementById("res_pass").value=passwd; 
+		}	
+		function enc3(){
+			var password=$("#res_pass1").val();
+			var passwd = hex_md5(password);
+			document.getElementById("res_pass1").value=passwd; 
+		}
+		function enc_all(){
+			var password=$("#res_pass1").val();
+			var passwd = hex_md5(password);
+			document.getElementById("res_pass1").value=passwd;
+			var password=$("#res_pass").val();
+			var passwd = hex_md5(password);
+			document.getElementById("res_pass").value=passwd; 
 
-
-
+		}		</script>
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/static/js/md5.js"></script>
 </html>

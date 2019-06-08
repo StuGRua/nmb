@@ -5,7 +5,7 @@ def sender(msg_to,send_info):
     passwd='cnwpouojpobvdccg'                                   #填入发送方邮箱的授权码
     msg_to=msg_to                                  #收件人邮
     
-    subject="\'错位 丨 Misplace\'的账号注册确认邮件" 
+    subject="账号注册确认邮件" 
     content='以下是您的确认链接：\n'+send_info+'\n请点击此链接以确认激活账号\n如果不是本人操作，请忽略本邮件\n'
     #content = render_template('mail/confirmation.html',send_info=send_info)
     msg = MIMEText(content)

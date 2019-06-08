@@ -4,9 +4,10 @@
 
 <head>
 	<meta charset="utf-8">
-	<title>Portal</title>
+	<title>错位 丨 Misplace</title>
 	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="/static/css/newnavbar.css" rel="stylesheet">
 	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
 	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/static/js/md5.js"></script>
@@ -62,6 +63,15 @@
 			var password=$("#res_pass1").val();
 			var passwd = hex_md5(password);
 			document.getElementById("res_pass1").value=passwd; 
+		}
+		function enc_all(){
+			var password=$("#res_pass1").val();
+			var passwd = hex_md5(password);
+			document.getElementById("res_pass1").value=passwd;
+			var password=$("#res_pass").val();
+			var passwd = hex_md5(password);
+			document.getElementById("res_pass").value=passwd; 
+
 		}		
 		</script>
 </head>
@@ -74,7 +84,9 @@
 	{% endif %}
 	<script>
 		if(GetUrlParam("confirmation_ok")==1){
-			alert("邮箱链接验证成功.");
+			alert("邮箱链接验证成功.点击确认后本页面可能关闭，也可能不关闭，哈哈哈");
+			window.open('','_self');
+			window.close();
 		}
 		if(GetUrlParam("err")==1){
 			alert("登陆出错.");
@@ -104,11 +116,13 @@
 							</a>
 							<ul class="dropdown-menu">
 								<li><a href="/home">时间线</a></li>
-								<li><a href="/section/main">综合</a></li>
+								<li><a href="/section/综合">综合</a></li>
+								<li><a href="/section/校内">校内</a></li>
 								<li><a href="/section/形势与政策">形势与政策</a></li>
 								<li><a href="/section/问询">问询</a></li>
 								<li><a href="/section/深夜">深夜</a></li>
-								<li><a href="/section/other">其他</a></li>
+								<li><a href="/section/其他">其他</a></li>
+								<li><a href="/section/反馈">反馈</a></li>
 							</ul>
 						</li>
 						<li class="nav-item">
@@ -155,12 +169,12 @@
 									<div class="form-group">
 										<label for="pass" class="col-sm-2 control-label">密码</label>
 										<div class="col-sm-10">
-											{{loginform.password(size=40,type="password",class="form-control",id="password1",placeholder="请输入密码",onblur="enc(password1)") }}
+											{{loginform.password(size=40,type="password",class="form-control",id="password1",placeholder="请输入密码") }}
 										</div>
 										<hr>
 										{{ loginform.csrf_token }}
 										<button type="submit" class="btn btn-primary center-block  btn "
-											value="Submit">登陆</button>
+											value="Submit" onclick="enc(password1)">登陆</button>
 									</div>
 								</form>
 							</div>
@@ -175,20 +189,20 @@
 									<div class="form-group">
 										<label for="name" class="col-sm-2 control-label">用户名</label>
 										<div class="col-sm-10">
-											<script>//alert('由于当前前后端均尚未完善，出于个人信息安全考虑，不推荐使用强密码、常用密码作为本站密码！！！');</script>
 											{{signinform.name(size=40,class="form-control",id="name",placeholder="用户名")}}
 										</div>
 									</div>
 									<div class="form-group">
 										<label for="pass" class="col-sm-2 control-label">密码</label>
 										<div class="col-sm-10">
-											{{signinform.password1(size=40,type="password",class="form-control",id="res_pass",placeholder="请输入密码",onblur="enc2()")}}
+												密码长度需6位及以上非纯数字！
+											{{signinform.password1(size=40,type="password",class="form-control",id="res_pass",placeholder="密码长度需6位及以上非纯数字！")}}
 										</div>
 									</div>
 									<div class="form-group">
 										<label for="pass" class="col-sm-2 control-label">确认密码</label>
 										<div class="col-sm-10">
-											{{signinform.password2(size=40,type="password",class="form-control",id="res_pass1",placeholder="请再次输入密码",onblur="enc3()")}}
+											{{signinform.password2(size=40,type="password",class="form-control",id="res_pass1",placeholder="请再次输入密码")}}
 										</div>
 									</div>
 									<div class="form-group">
@@ -200,7 +214,7 @@
 										<hr>
 										{{ signinform.csrf_token }}
 										<button type="submit" class="btn btn-primary center-block btn btn-danger"
-											value="Submit" id="res_submit">注册</button>
+											value="Submit" id="res_submit" onclick="enc_all()">注册</button>
 									</div>
 								</form>
 
@@ -222,15 +236,47 @@
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-top:60px;">
 
 			<div class="well well-lg">
-				<h1>{{userip}}你好！</h1>
-				<br>
+				<h4>公告</h4>
+				<h5>更新内容：可选的发帖时不展示在时间线上；<br>回复插图时自动在文本框内填充<br>换行成了</h5>
+				<br><!--
 				<h2>上次删库：5月31号早10：30</h2>
 				<h1>由于尚处于开发阶段，如果发现无法登陆，可能是删库了，烦请重新注册</h1>
-				<br>
+				<br>-->
 			</div>
 		</div>
 
+		{% for posts in topped_posts %}
+		<hr>
 
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<a href="/viewpost/{{posts.id}}">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+
+						<h3 class="panel-title">
+
+							<p><strong>【置顶】ID:{{posts.id}} [板块：{{posts.section}}] {{posts.title}}[{{posts.replies}}回复]</strong></p>
+
+
+							<p> <img src="/static/avatars/{{posts.avatar}}.jpg" width="30px"
+									height="auto">{{posts.poster}}</p>
+								<p>最后更新{{posts.update_time}}</p>
+						</h3>
+					</div>
+					<div class="panel-body">
+
+						<p>{%if posts.withpic %}
+							<img src="/{{posts.pic_route}}" height="100px" width="auto">
+							{% endif %}{{posts.content[0:100]}}</p>
+					</div>
+				</div>
+
+			</a>
+
+		</div>
+
+
+		{% endfor %}
 		{% for posts in tenposts %}
 		<hr>
 
@@ -245,8 +291,8 @@
 
 
 							<p> <img src="/static/avatars/{{posts.avatar}}.jpg" width="30px"
-									height="auto">{{posts.poster}}
-								{{posts.post_time}}</p>
+									height="auto">{{posts.poster}}</p>
+								<p>更新时间{{posts.update_time}}</p>
 						</h3>
 					</div>
 					<div class="panel-body">
