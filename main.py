@@ -143,6 +143,10 @@ def api(kw):
         for ip in visited_ip:
             result.append(str('ip:'+ip+checkip(ip)))
         return str(result)
+    if kw == 'power_fee':
+        room_id = request.values.get('id')
+        print(room_id)
+        return getfee(room_id)
     return return404()
 
 @app.route('/',methods=['GET','POST'])
@@ -150,8 +154,8 @@ def home():
     nologin = request.values.get('nologin')
     if request.remote_addr not in visited_ip:
         visited_ip.append(request.remote_addr)
-    topped_posts = posts.query.filter(posts.topped==True).filter(posts.no_show==False).order_by(-posts.update_time).all()
-    tenposts = posts.query.filter(posts.head==True).filter(posts.topped==False).order_by(-posts.update_time).all()
+    topped_posts = posts.query.filter(posts.topped==True).order_by(-posts.update_time).all()
+    tenposts = posts.query.filter(posts.head==True).filter(posts.topped==False).filter(posts.no_show==False).order_by(-posts.update_time).all()
     return render_template('view/portal.html',topped_posts = topped_posts,tenposts=tenposts,userip = request.remote_addr,datetime=datetime.datetime.now(),\
         loginform=loginform(),signinform=signinform(),nologin=str(nologin))
 
@@ -453,6 +457,10 @@ def homepage():
     allposts = posts.query.filter(posts.head==True).filter(posts.topped==False).filter(posts.no_show==False).order_by(-posts.post_time).all()
     return render_template('view/home.html',result=result,newpostform=new_post_form(),\
                            allposts = allposts,topped_posts=topped_posts,section='时间线',no_confirmation=request.values.get('no_confirmation'),nokookie = nokookie)
+
+@app.route('/gg',methods=['GET','POST'])
+def gg():
+    return render_template('view/gg.html')
 
 
 @app.route('/section/<section_name>',methods=['GET','POST'])

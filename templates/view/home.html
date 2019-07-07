@@ -19,6 +19,7 @@
         <![endif]-->
 	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
 	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/static/js/nmb_main.js"></script>
 	{% if no_confirmation == '1'%}
 	<script>alert('未通过邮件确认!');</script>
 	{% endif %}
@@ -28,7 +29,8 @@
 			alert('未获得有效饼干,将不能有效发帖.请点击导航栏左侧获取饼干或咨询管理员.');
 			$("#makeNew").removeAttr("data-target");
 			}
-			}
+		}</script>
+		<script>
 		function encoderOn(){
 				$("#encoderFrame").attr("width","300px");
 				$("#encoderFrame").attr("height","200px");
@@ -312,6 +314,7 @@
 
 
 	{% endfor %}
+
 </body>
 
 </html>
