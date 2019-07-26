@@ -1,6 +1,7 @@
-from flask import Flask,request,render_template,redirect,url_for,session,jsonify
+from flask import Flask,request,render_template,redirect,url_for,session,jsonify,Blueprint
 import flask_sqlalchemy
 from flask_sqlalchemy import SQLAlchemy
+import sqlalchemy
 import pymysql
 import datetime
 from forms import loginform,signinform,new_post_form,comment_form
@@ -9,13 +10,18 @@ from enc import *
 import time
 from cookiemaker import *
 from mail_sender import *
-import urllib
+import urllib,json
 from utilities import *
+from blueprints.extensions import extension
 app = Flask(__name__)
+m = Blueprint('m', __name__, subdomain='m')
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:aA_iul453_bB@127.0.0.1:3306/nmb0"
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY']='wtfwtf'
+app.config["SERVER_NAME"]='ftmagic.xyz:6060'
+app.register_blueprint(extension)
+app.register_blueprint(m)
 visited_ip=[]
 db = SQLAlchemy(app)
 class User(db.Model):
@@ -119,6 +125,8 @@ def checkip(ip):
         #coma = data.find(',')
         #print(data[start:coma],'123123')
     return data
+
+
 @app.route('/api/<kw>')
 def api(kw):
     #print(kw)  
@@ -143,10 +151,6 @@ def api(kw):
         for ip in visited_ip:
             result.append(str('ip:'+ip+checkip(ip)))
         return str(result)
-    if kw == 'power_fee':
-        room_id = request.values.get('id')
-        print(room_id)
-        return getfee(room_id)
     return return404()
 
 @app.route('/',methods=['GET','POST'])
@@ -158,6 +162,38 @@ def home():
     tenposts = posts.query.filter(posts.head==True).filter(posts.topped==False).filter(posts.no_show==False).order_by(-posts.update_time).all()
     return render_template('view/portal.html',topped_posts = topped_posts,tenposts=tenposts,userip = request.remote_addr,datetime=datetime.datetime.now(),\
         loginform=loginform(),signinform=signinform(),nologin=str(nologin))
+
+
+@app.route('/all')#this works
+def get_all():
+    result_dict = []
+    try:
+        all_posts = posts.query.filter(posts.head==True).order_by(-posts.update_time).all()
+        for post in all_posts:
+            ret = post.__dict__
+            ret.pop('_sa_instance_state')
+            ret.pop('ider')
+            ret.pop('poster_ip')
+            result_dict.append(ret)
+        return jsonify(result_dict)
+    except Exception as e:
+        print(e)
+        return return404('获取首页失败')
+
+@app.route('/one/<id>')
+def get_one(id):
+    try:
+        post = posts.query.filter(posts.id==id).first()
+        ret = post.__dict__
+        ret.pop('_sa_instance_state')
+        ret.pop('ider')
+        ret.pop('poster_ip')
+        return jsonify(ret)
+    except Exception as e:
+        print(e)
+        return return404('获取帖子ID:'+id+'失败') 
+        return return404('获取帖子ID:'+id+'失败') 
+
 
 @app.route('/new',methods=['POST'])
 def newpost():
@@ -458,9 +494,6 @@ def homepage():
     return render_template('view/home.html',result=result,newpostform=new_post_form(),\
                            allposts = allposts,topped_posts=topped_posts,section='时间线',no_confirmation=request.values.get('no_confirmation'),nokookie = nokookie)
 
-@app.route('/gg',methods=['GET','POST'])
-def gg():
-    return render_template('view/gg.html')
 
 
 @app.route('/section/<section_name>',methods=['GET','POST'])
