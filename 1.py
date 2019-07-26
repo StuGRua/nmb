@@ -21,6 +21,7 @@ fee = getfee('327')
 if float(fee)<3:
     print('<3')
     text = Label(root,text="电费不足")
+    text.pack()
     root.mainloop()
 else:
     exit(0)
