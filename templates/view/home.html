@@ -5,11 +5,11 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>错位 丨 Misplace</title>
+	<title>测试版</title>
 
 	<!-- Bootstrap CSS -->
 	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-	<link href="/static/css/newnavbar.css" rel="stylesheet">
+	<link href="/static/css/testnavbar.css" rel="stylesheet">
 	<link type="text/css" href="/static/css/harmony.css"rel="stylesheet">
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -20,6 +20,7 @@
 	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
 	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/static/js/nmb_main.js"></script>
+
 	{% if no_confirmation == '1'%}
 	<script>alert('未通过邮件确认!');</script>
 	{% endif %}
@@ -87,12 +88,14 @@
 					</li>
 					<li class="nav-item dropdown">
 						<a class="nav-link" href="#" class="dropdown-toggle" data-toggle="dropdown">
+							<p id="kookie_main">
 							饼干：{{result.kookies}}
 							<b class="caret"></b>
+							</p>
 						</a>
 						<ul class="dropdown-menu">
 							<li>
-								<a href="/newkookie">获取新饼干</a>
+								<a href="#" onclick="kookie_update()">获取新饼干</a>
 							</li>
 						</ul>
 					</li>
@@ -316,5 +319,5 @@
 	{% endfor %}
 
 </body>
-
+<script type="text/javascript" src="/static/js/nmb_kookie.js"></script>
 </html>

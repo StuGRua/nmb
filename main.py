@@ -447,33 +447,41 @@ def changeavt(avtid):
         print(e)
         return return500()
     return redirect(url_for('homepage'))
-@app.route('/newkookie',methods=['GET','POST'])
-def newkookie():
+
+
+@app.route('/kookie',methods=['GET','POST','UPDATE','DELETE'])
+def kookie1():
     if checklogin():
         return redirect(url_for('home',nologin=1))
     if check_confirmation():
         return redirect(url_for('homepage',no_confirmation=1))
-    account = session.get('account')
-    kookie = cookie(User.query.filter(User.email==account).first().username)
-    result = User.query.filter(User.email == account).update({'kookies': kookie})
-    try:
-        db.session.commit()
+    if request.method == 'UPDATE':#新生产kookie
+        account = session.get('account')
+        kookie = cookie(User.query.filter(User.email==account).first().username)
+        result = User.query.filter(User.email == account).update({'kookies': kookie})
         try:
-            oldkookie = str(User.query.filter(User.email==account).first().oldkookies)
-            oldkookie += (kookie+'-')
-            User.query.filter(User.email==account).update({'oldkookies':oldkookie})#保存历史kookie
             db.session.commit()
-            session['kookie'] = kookie#s设置新kookie
+            try:
+                oldkookie = str(User.query.filter(User.email==account).first().oldkookies)
+                oldkookie += (kookie+'-')
+                User.query.filter(User.email==account).update({'oldkookies':oldkookie})#保存历史kookie
+                db.session.commit()
+            except Exception as e:
+                db.session.rollback()
+                print(e)
+                return return500()
         except Exception as e:
             db.session.rollback()
             print(e)
-            return return500()
-    except Exception as e:
-        db.session.rollback()
-        print(e)
-        return return500()
-    return redirect(request.referrer)
-
+            return return500() 
+        return '1'
+    elif request.method == 'GET':#直接返回kookie字符串
+        account = session.get('account')
+        kookie = User.query.filter(User.email==account).first().kookies
+        return str(kookie)
+    else:
+        return return500('wrong methods.')
+        
 
 @app.route('/home',methods=['GET','POST'])
 def homepage():
