@@ -12,7 +12,12 @@ function kookie_update(){
                 else{  
                     alert(result);
                 }
+            },
+            error:function(jqXHR,testStatus,errorThrown){
+                var a = document.getElementById("kookie_main");
+                a.innerText = "未通过邮箱验证";
             }
+            
         })
     
 }

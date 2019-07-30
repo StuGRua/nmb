@@ -423,30 +423,31 @@ def delpost(id):
     else:
         return return500('无权限进行本操作')
 
-
-@app.route('/changeavatar/<avtid>',methods=['GET','POST'])
-def changeavt(avtid):
+@app.route('/avatar',methods=['GET','POST','UPDATE','DELETE'])
+def avatar1():
     if checklogin():
         return redirect(url_for('home',nologin=1))
     if check_confirmation():
         return redirect(url_for('homepage',no_confirmation=1))
-    account = session.get('account')
-    kookie = User.query.filter(User.email==account).first().kookies
-    User.query.filter(User.email == account).update({'avatar':avtid})
-    try:
-        db.session.commit()
-        try:
-            posts.query.filter(posts.poster==kookie).update({'avatar':avtid})
+    if request.method == 'UPDATE':#更新头像
+        account = session.get('account')
+        avtid = request.values.get('avatar')
+        kookie = User.query.filter(User.email==account).first().kookies
+        User.query.filter(User.email == account).update({'avatar':avtid})
+        posts.query.filter(posts.poster==kookie).update({'avatar':avtid})
+        try: 
             db.session.commit()
         except Exception as e:
-            db.session.rollback()
+            db.session.rollback() 
             print(e)
-            return return500()
-    except Exception as e:
-        db.session.rollback()
-        print(e)
-        return return500()
-    return redirect(url_for('homepage'))
+            return return500() 
+        return '1'
+    elif request.method == 'GET':
+        account = session.get('account')
+        result = User.query.filter(User.email==account).first().avatar
+        return str(result)
+    else:
+        return return500('wrong methods.')
 
 
 @app.route('/kookie',methods=['GET','POST','UPDATE','DELETE'])

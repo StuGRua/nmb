@@ -65,7 +65,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="/home">错位 丨 Misplace</a>
+				<a class="navbar-brand" href="/home">测试版</a>
 			</div>
 			<div class="collapse navbar-collapse" id="example-navbar-collapse">
 				<ul class="nav navbar-nav">
@@ -101,10 +101,10 @@
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="#" class="dropdown-toggle" data-toggle="modal" data-target="#myModal"
-							style="padding-top:5px;padding-bottom:0;"><img src="\static/avatars/{{result.avatar}}.jpg"
+							style="padding-top:5px;padding-bottom:0;"><img id="avt_main" src="\static/avatars/{{result.avatar}}.jpg"
 								height="45px" width="auto">
 							<b class="caret"></b>
-						</a>
+						</a> 
 
 					</li>
 					<li class="nav-item">
@@ -144,14 +144,11 @@
 				</div>
 				<div class="modal-body">
 					{% for i in range(0,17)%}
-					<a href="/changeavatar/{{i}}"><img src="\static/avatars/{{i}}.jpg" height="100px" width="auto"></a>
+					<a href="#" onclick="change_avt({{i}})" data-dismiss="modal"><img src="\static/avatars/{{i}}.jpg" height="100px" width="auto"></a>
 					{% endfor %}
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">关闭
-					</button>
-					<button type="button" class="btn btn-primary">
-						提交更改
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消
 					</button>
 				</div>
 			</div><!-- /.modal-content -->
@@ -171,33 +168,6 @@
 				</div>
 				<div class="modal-body">
 					
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">关闭
-					</button>
-				</div>
-			</div><!-- /.modal-content -->
-		</div><!-- /.modal -->
-	</div>
-
-	<!-- 模态框（Modal） -->
-	<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-						&times;
-					</button>
-					<h4 class="modal-title" id="myModalLabel2">
-						获取新饼干
-					</h4>
-				</div>
-				<div class="modal-body">
-					<a href="/newkookie">
-						<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-							点击获取新饼干
-						</button>
-					</a>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭
@@ -320,4 +290,5 @@
 
 </body>
 <script type="text/javascript" src="/static/js/nmb_kookie.js"></script>
+<script type="text/javascript" src="/static/js/nmb_avt.js"></script>
 </html>
