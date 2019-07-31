@@ -1,17 +1,14 @@
 from flask import Flask,request,render_template,redirect,url_for,session,jsonify,Blueprint
-import flask_sqlalchemy
-from flask_sqlalchemy import SQLAlchemy
-import sqlalchemy
+import urllib,json
 import pymysql
 import datetime
 from forms import loginform,signinform,new_post_form,comment_form
-from errors import *
-from enc import *
+from utils.errors import *
+from utils.enc import *
 import time
-from cookiemaker import *
-from mail_sender import *
-import urllib,json
-from utilities import *
+from utils.cookiemaker import *
+from utils.utilities import *
+from utils.mail_sender import *
 from blueprints.extensions import extension
 ###
 from models import db,app,User,posts

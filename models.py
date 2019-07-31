@@ -5,7 +5,7 @@ import sqlalchemy
 import pymysql
 from blueprints.extensions import extension
 import datetime
-from enc import *
+from utils.enc import *
 app = Flask(__name__)
 m = Blueprint('m', __name__, subdomain='m')
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:aA_iul453_bB@127.0.0.1:3306/nmb0"

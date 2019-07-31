@@ -1,5 +1,5 @@
 import time
-from enc import *
+from utils.enc import *
 import hashlib
 def cookie(username):
     username = hashlib.md5(bytes(username,encoding='utf-8'))
