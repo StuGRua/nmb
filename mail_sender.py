@@ -1,8 +1,8 @@
 import smtplib
 from email.mime.text import MIMEText
 def sender(msg_to,send_info):
-    msg_from='2889205153@qq.com' #发送方邮箱
-    passwd='cnwpouojpobvdccg'                                   #填入发送方邮箱的授权码
+    msg_from='stug_iii@foxmail.com' #发送方邮箱
+    passwd='hklvpuqmdyaojebb'                                   #填入发送方邮箱的授权码
     msg_to=msg_to                                  #收件人邮
     
     subject="账号注册确认邮件" 
@@ -22,4 +22,4 @@ def sender(msg_to,send_info):
     finally:
         s.quit()
 if __name__ == "__main__":
-    sender('2889205153@qq.com','th2is link')
+    sender('stug_iii@foxmail.com','th2is link')

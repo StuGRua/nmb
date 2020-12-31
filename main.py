@@ -12,7 +12,7 @@ from mail_sender import *
 import urllib
 from utilities import *
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:aA_iul453_bB@127.0.0.1:3306/nmb0"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://StuG:x74rtw05@localhost:3306/nmb0"
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY']='wtfwtf'
@@ -121,7 +121,7 @@ def checkip(ip):
     return data
 @app.route('/api/<kw>')
 def api(kw):
-    #print(kw)  
+    #print(kw)
     if kw == 'timestamp':
         return str(int((time.time())))
     if kw == 'datetime':
@@ -288,7 +288,7 @@ def comment(post_id):
                     pic.save(route) #图片名就是POST ID
                     try:
                         posts.query.filter(posts.id == ider).update({'pic_route':route})
-                        db.session.commit()    
+                        db.session.commit()
                     except Exception as e:
                         print(e)
                         return return500('保存图片路径或保存图时出错')
@@ -372,7 +372,7 @@ def delpost(id):
                 db.session.rollback()
                 print(e)
                 return return500(str(e))
-            return redirect(url_for('homepage',deleteok=1))   
+            return redirect(url_for('homepage',deleteok=1))
         else:
             last_post = posts.query.filter(posts.next==id).first().id#找出上一个指向该post的id
             db.session.delete(this_post)
@@ -532,9 +532,9 @@ def signin():
             session['kookies']='00000000'
             psw_hash = User.query.filter(User.email==email).first().password_hash
             if not psw_hash:
-                return return500('psw_hash is None') 
+                return return500('psw_hash is None')
             try:
-                sender(email,'http://www.ftmagic.xyz:6060/api/confirmation?code='+psw_hash)
+                sender(email,'localhost:6060/api/confirmation?code='+psw_hash)
             except Exception as e:
                 print(e)
                 return return500('邮件发送失败')
@@ -550,4 +550,4 @@ def signin():
 if __name__ == '__main__':
     #db.drop_all()
     db.create_all()
-    app.run(host='0.0.0.0', debug=True ,port=6060)
+    app.run(host='localhost', debug=True ,port=6060,threaded=True)
