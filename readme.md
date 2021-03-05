@@ -3,7 +3,7 @@
 ## 基于Flask实现的匿名论坛
 - 前端框架：Bootstrap  
 - 后端框架：Flask  
-- 开发文档：<https://github.com/StuGRua/2020_project/blob/main/24-赵书彬-开源软件基础大作业.pdf>
+- 开发文档：<https://github.com/StuGRua/nmb/blob/master/%E6%96%87%E6%A1%A3.pdf>
 - 测试环境：<a href="/requirements.txt">requirements.txt</a>
 - 特别鸣谢：<a href="https://github.com/tzY15368">@tzY15368</a>
 ----
