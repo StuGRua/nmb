@@ -1,11 +1,12 @@
 <!--这个页面是没登陆的人看到的-->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cn">
 
 <head>
 	<meta charset="utf-8">
-	<title>错位 丨 Misplace</title>
+	<title>错位 丨 Misplace - portal</title>
 	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/StuGRua/2020_project/main/favicon.ico" type="image/x-icon">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="/static/css/newnavbar.css" rel="stylesheet">
 	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
@@ -19,10 +20,10 @@
 			　　　　if (arrObj.length > 1) {
 			　　　　　　var arrPara = arrObj[1].split("&");
 			　　　　　　var arr;
-			
+
 			　　　　　　for (var i = 0; i < arrPara.length; i++) {
 			　　　　　　　　arr = arrPara[i].split("=");
-			
+
 			　　　　　　　　if (arr != null && arr[0] == paraName) {
 			　　　　　　　　　　return arr[1];
 			　　　　　　　　}
@@ -33,10 +34,10 @@
 			　　　　　　return "";
 			　　　　}
 			　　	}
-		function check(v_psw) 
+		function check(v_psw)
 					{
 						psw=document.getElementById("res_pass").value;
-						if(psw!=v_psw) 
+						if(psw!=v_psw)
 						{
 							alert("两次密码不相同！");
 							document.getElementById("res_submit").disabled="disabled";
@@ -61,14 +62,14 @@
 						document.getElementById("res_pass1").value=passwd;
 						var password=$("#res_pass").val();
 						var passwd = hex_md5(password);
-						document.getElementById("res_pass").value=passwd; 
-			
-					}		
+						document.getElementById("res_pass").value=passwd;
+
+					}
 		function encoderOn(){
 						$("#encoderFrame").attr("width","300px");
 						$("#encoderFrame").attr("height","200px");
 						$("#encoderFrame").attr("frameborder","1");
-					} 
+					}
 		function encoderOff(){
 						$("#encoderFrame").attr("width","0px");
 						$("#encoderFrame").attr("height","0px");
@@ -152,7 +153,7 @@
 		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
 			aria-hidden="true">
 			<div class="modal-dialog" style="">
-				<div class="modal-content">
+				<div class="modal-content col-xs-12 col-sm-12 col-md-12 col-lg-12">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 							&times;
@@ -162,22 +163,22 @@
 						</h4>
 					</div>
 					<div class="modal-body">
-						<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 panel panel-primary col-md-offset-3">
+						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 panel panel-primary">
 							<div class="panel-heading">
 								<h3 class="panel-title">登陆</h3>
 							</div>
 							<div class="panel-body">
 								<form class="form-horizontal" role="form" action="/login" method="post">
 									<div class="form-group">
-										<label for="name" class="col-sm-2 control-label">账号</label>
-										<div class="col-sm-10">
+										<label for="name" class="col-sm-3 control-label">账号</label>
+										<div class="col-sm-9">
 
 											{{ loginform.name(size=20,class="form-control",id="name",placeholder="请输入账号") }}
 										</div>
 									</div>
 									<div class="form-group">
-										<label for="pass" class="col-sm-2 control-label">密码</label>
-										<div class="col-sm-10">
+										<label for="pass" class="col-sm-3 control-label">密码</label>
+										<div class="col-sm-9">
 											{{loginform.password(size=40,type="password",class="form-control",id="password1",placeholder="请输入密码") }}
 										</div>
 										<hr>
@@ -189,34 +190,34 @@
 							</div>
 
 						</div>
-						<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 panel panel-danger col-md-offset-3">
+						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 panel panel-danger">
 							<div class="panel-heading">
 								<h3 class="panel-title">注册</h3>
 							</div>
 							<div class="panel-body">
 								<form class="form-horizontal" role="form" action="/signin" method="post">
 									<div class="form-group">
-										<label for="name" class="col-sm-2 control-label">用户名</label>
-										<div class="col-sm-10">
+										<label for="name" class="col-sm-3 control-label">用户名</label>
+										<div class="col-sm-9">
 											{{signinform.name(size=40,class="form-control",id="name",placeholder="用户名")}}
 										</div>
 									</div>
 									<div class="form-group">
-										<label for="pass" class="col-sm-2 control-label">密码</label>
-										<div class="col-sm-10">
+										<label for="pass" class="col-sm-3 control-label">密码</label>
+										<div class="col-sm-9">
 												密码长度需6位及以上非纯数字！
 											{{signinform.password1(size=40,type="password",class="form-control",id="res_pass",placeholder="密码长度需6位及以上非纯数字！")}}
 										</div>
 									</div>
 									<div class="form-group">
-										<label for="pass" class="col-sm-2 control-label">确认密码</label>
-										<div class="col-sm-10">
+										<label for="pass" class="col-sm-3 control-label">确认密码</label>
+										<div class="col-sm-9">
 											{{signinform.password2(size=40,type="password",class="form-control",id="res_pass1",placeholder="请再次输入密码")}}
 										</div>
 									</div>
 									<div class="form-group">
-										<label for="pass" class="col-sm-2 control-label">邮箱</label>
-										<div class="col-sm-10">
+										<label for="pass" class="col-sm-3 control-label">邮箱</label>
+										<div class="col-sm-9">
 											{{signinform.email(size=40,class="form-control",id="email",placeholder="请输入邮箱")}}
 											<span id="ale" class="label label-default"></span>
 										</div>
@@ -231,7 +232,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="modal-footer">
+					<div class="modal-footer col-xs-12 col-sm-12 col-md-12 col-lg-12">
 						<button type="button" class="btn btn-default" data-dismiss="modal">关闭
 						</button>
 					</div>
@@ -246,11 +247,8 @@
 
 			<div class="well well-lg">
 				<h4>公告</h4>
-				<h5>更新内容：可选的发帖时不展示在时间线上；<br>回复插图时自动在文本框内填充<br>换行成了</h5>
-				<br><!--
-				<h2>上次删库：5月31号早10：30</h2>
-				<h1>由于尚处于开发阶段，如果发现无法登陆，可能是删库了，烦请重新注册</h1>
-				<br>-->
+				<h5>更新内容：对和谐编码的模块进行了迁移（变为全前端，避免多次请求）<br>对非核心功能进行了精简<br>变天了，好冷</h5>
+				<br>
 			</div>
 		</div>
 
@@ -265,18 +263,15 @@
 						<h3 class="panel-title">
 
 							<p><strong>【置顶】ID:{{posts.id}} [板块：{{posts.section}}] {{posts.title}}[{{posts.replies}}回复]</strong></p>
-
-
-							<p> <img src="/static/avatars/{{posts.avatar}}.jpg" width="30px"
-									height="auto">{{posts.poster}}</p>
-								<p>最后更新{{posts.update_time}}</p>
 						</h3>
+						<p> <img src="/static/avatars/{{posts.avatar}}.jpg" width="30px" height="auto">{{posts.poster}}</p>
+						<p>最后更新{{posts.update_time}}</p>
 					</div>
 					<div class="panel-body">
 
 						<p>{%if posts.withpic %}
 							<img src="/{{posts.pic_route}}" height="100px" width="auto">
-							{% endif %}{{posts.content[0:100]}}</p>
+							{% endif %}<br>{{posts.content[0:100]}}</p>
 					</div>
 				</div>
 
@@ -290,25 +285,22 @@
 		<hr>
 
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-			<a href="/viewpost/{{posts.id}}">
-				<div class="panel panel-default">
-					<div class="panel-heading">
+			<a href="/viewpost/{{posts.id}}" style="text-decoration:none">
+				<div class="panel panel-default" >
+                    <div class="panel-heading">
 
-						<h3 class="panel-title">
-
-							<p>ID:{{posts.id}} [板块：{{posts.section}}] {{posts.title}}[回复数：{{posts.replies}}]</p>
-
-
-							<p> <img src="/static/avatars/{{posts.avatar}}.jpg" width="30px"
-									height="auto">{{posts.poster}}</p>
-								<p>更新时间{{posts.update_time}}</p>
-						</h3>
-					</div>
+                        <h3 class="panel-title">
+                            <p><strong>ID:{{posts.id}} [板块：{{posts.section}}] {{posts.title}}</strong>
+                            </p>
+                                <p><img src="/static/avatars/{{posts.avatar}}.jpg" width="30px" height="auto">{{posts.poster}}</p>
+                        </h3>
+                        <span class="badge">{{posts.replies}}回复</span><span class="badge">最后更新{{posts.update_time}}</span>
+                    </div>
 					<div class="panel-body">
 
 						<p>{%if posts.withpic %}
 							<img src="/{{posts.pic_route}}" height="100px" width="auto">
-							{% endif %}{{posts.content[0:100]}}</p>
+							{% endif %}<br>{{posts.content[0:100]}}</p>
 					</div>
 				</div>
 

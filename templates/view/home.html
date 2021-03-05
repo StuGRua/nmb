@@ -5,12 +5,13 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>错位 丨 Misplace</title>
+	<title>错位 丨 Misplace - home</title>
 
 	<!-- Bootstrap CSS -->
 	<link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 	<link href="/static/css/newnavbar.css" rel="stylesheet">
 	<link type="text/css" href="/static/css/harmony.css"rel="stylesheet">
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/StuGRua/2020_project/main/favicon.ico" type="image/x-icon">
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 	<!--[if lt IE 9]>
@@ -19,38 +20,12 @@
         <![endif]-->
 	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
 	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 	<!--<script type="text/javascript" src="/static/js/nmb_main.js"></script>-->
 	{% if no_confirmation == '1'%}
 	<script>alert('未通过邮件确认!');</script>
 	{% endif %}
-	<script>
-		function checkKookie(){
-			if({{nokookie}}==1){
-			alert('未获得有效饼干,将不能有效发帖.请点击导航栏左侧获取饼干或咨询管理员.');
-			$("#makeNew").removeAttr("data-target");
-			}
-		}</script>
-		<script>
-		function encoderOn(){
-				$("#encoderFrame").attr("width","300px");
-				$("#encoderFrame").attr("height","200px");
-				$("#encoderFrame").attr("frameborder","1");
-			}
-		function encoderOff(){
-				$("#encoderFrame").attr("width","0px");
-				$("#encoderFrame").attr("height","0px");
-				$("#encoderFrame").attr("frameborder","0");
-			}
-	</script>
-	<script>function copyToText(){
-		var a = document.getElementById('encoderFrame').contentWindow.document.getElementById('encoded-area').value;
-		alert(a);
-		document.getElementById("post_content").value=a;
-	}
-	function pic_inserted(){
-		document.getElementById("reply1").value+="[图片]";
-	}
-	</script>
+
 </head>
 <body style="margin-top:0px">
 	<div class="container-fluid">
@@ -124,8 +99,9 @@
 					</li>
 				</ul>
 			</div>
+        </nav>
 	</div>
-	</nav>
+
 
 	<!-- 模态框（Modal） -->
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -167,7 +143,7 @@
 					</h4>
 				</div>
 				<div class="modal-body">
-					
+
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭
@@ -219,26 +195,29 @@
 				<div class="modal-body">
 					<form action="/new" method="post" enctype="multipart/form-data">
 						{{newpostform.csrf_token }}
-						{{newpostform.title.label}} {{newpostform.title}}<br>
-						{{newpostform.content.label}} {{newpostform.content(id="post_content")}}
-						{{newpostform.section.label}} {{newpostform.section}}<br>
-						{{newpostform.no_show.label}} {{newpostform.no_show}}<br>
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">{{newpostform.title.label}} {{newpostform.title}}</div>
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">{{newpostform.content.label}} {{newpostform.content(id="post_content")}}</div>
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">{{newpostform.section.label}} {{newpostform.section}}<br></div>
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">{{newpostform.no_show.label}} {{newpostform.no_show}}<br></div>
 						<div class="form-group col-sm-6">
 							<input type="file" name="pic" class="form-control btn-info">
 						</div>
 						{{newpostform.submit}}
 					</form>
 
-				<iframe src="/api/harmony" width="0px" height="0px" frameborder="0" id="encoderFrame">
-				</iframe>
-
 				</div>
 
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default" onclick="encoderOn()">打开编码器</button>
-					<button type="button" class="btn btn-default" onclick="encoderOff()">关闭编码器</button>
-					<button type="button" class="btn btn-default" onclick="copyToText()"><strong>覆盖</strong>编码后的文本到输入框</button>
-					<button type="button" class="btn btn-default" data-dismiss="modal">关闭	</button>
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <button type="button"  class="btn btn-default" onclick="encoderOn()">打开编码器</button>
+                        <button type="button"  class="btn btn-default" onclick="encoderOff()">关闭编码器</button>
+                        <button type="button" class="btn btn-default" onclick="copyToText()"><strong>覆盖</strong>编码后的文本到输入框</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭	</button>
+                    </div>
+                    <hr>
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="encoderFrame">
+
+                    </div>
 				</div>
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal -->
@@ -247,11 +226,8 @@
 
 		<div class="well well-lg">
 			<h5>公告</h5>
-			<h6>更新内容：可选的发帖时不展示在时间线上；<br>回复插图时自动在文本框内填充<br>换行成了</h6>
-			<br><!--
-			<h2>上次删库：5月31号早10：30</h2>
-			<h1>由于尚处于开发阶段，如果发现无法登陆，可能是删库了，烦请重新注册</h1>
-			<br>-->
+			<h5>更新内容：对和谐编码的模块进行了迁移（变为全前端，避免多次请求）<br>对非核心功能进行了精简<br>变天了，好冷</h5>
+			<br>
 		</div>
 	</div>
 	<br>
@@ -265,12 +241,13 @@
 
 						<h3 class="panel-title">
 
-							<p><strong>【置顶】ID:{{posts.id}} [板块：{{posts.section}}] {{posts.title}}[{{posts.replies}}回复]</strong>最后更新{{posts.update_time}}</p>
+							<p><strong>【置顶】ID:{{posts.id}} [板块：{{posts.section}}] {{posts.title}}</strong></p>
 
 
 							<p> <img src="/static/avatars/{{posts.avatar}}.jpg" width="30px"
 									height="auto">{{posts.poster}}</p>
 						</h3>
+						<span class="badge">{{posts.replies}}回复</span><span class="badge">最后更新{{posts.update_time}}</span>
 					</div>
 					<div class="panel-body">
 
@@ -290,21 +267,22 @@
 	<hr>
 
 	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-		<a href="/viewpost/{{posts.id}}">
+		<a href="/viewpost/{{posts.id}}" style="text-decoration:none">
 			<div class="panel panel-default">
 				<div class="panel-heading">
 
 					<h3 class="panel-title">
-						<p><strong>ID:{{posts.id}} [板块：{{posts.section}}] {{posts.title}}[{{posts.replies}}回复]</strong>最后更新{{posts.update_time}}
+						<p><strong>ID:{{posts.id}} [板块：{{posts.section}}] {{posts.title}}</strong>
 						</p>
 							<p><img src="/static/avatars/{{posts.avatar}}.jpg" width="30px" height="auto">{{posts.poster}}</p>
 					</h3>
+					<span class="badge">{{posts.replies}}回复</span><span class="badge">最后更新{{posts.update_time}}</span>
 				</div>
 				<div class="panel-body">
 
 					<p>{%if posts.withpic %}
 						<img src="/{{posts.pic_route}}" height="100px" width="auto">
-						{% endif %}{% if posts.content[97] %}{{posts.content[0:97]}}...{% endif %}{% if not posts.content[97] %}{{posts.content}}{% endif %}</p>
+						{% endif %}<br>{% if posts.content[97] %}{{posts.content[0:97]}}...{% endif %}{% if not posts.content[97] %}{{posts.content}}{% endif %}</p>
 				</div>
 			</div>
 
@@ -316,5 +294,64 @@
 	{% endfor %}
 
 </body>
+<script type="text/javascript" src="/static/js/md5.js"></script>
+<script type="text/javascript" src="/static/js/harmoncer.js"></script>
+	<script>
+		function checkKookie(){
+			if({{nokookie}}==1){
+			alert('未获得有效饼干,将不能有效发帖.请点击导航栏左侧获取饼干或咨询管理员.');
+			$("#makeNew").removeAttr("data-target");
+			}
+		}</script>
+		<script>
+    var encoder_section=
+        "<script>"+
+        "var dl = document.getElementById(\"decode-btn\");\n" +
+        "var el = document.getElementById(\"encode-btn\");\n" +
+        "var ENC = function() {\n" +
+        "    document.getElementById(\"encoded-area\").value=encode(document.getElementById(\"decoded-area\").value);\n" +
+        "document.getElementById(\"decoded-area\").value=\"\";"+
+        "}\n" +
+        "var DEC = function() {\n" +
+        "    document.getElementById(\"decoded-area\").value=decode(document.getElementById(\"encoded-area\").value);\n" +
+        "    document.getElementById(\"encoded-area\").value=\"\";"+
+        "}\n" +
+        "dl.onclick=DEC;\n" +
+        "el.onclick=ENC;"+
+        "<"+"/script>\n"+
+        "\t<script>function copyToText(){\n" +
+        "\t\tvar a = document.getElementById('encoded-area').value;\n" +
+        "\t\talert(a);\n" +
+        "\t\tdocument.getElementById(\"post_content\").value=a;\n" +
+        "\t}\n" +
+        "\t"+"<"+"/script>"+
+        "                    <div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-4\">\n" +
+        "                        <label for=\"decoded-area\">解码</label>\n" +
+        "                        <textarea class=\"form-control\" id=\"decoded-area\" placeholder=\"Decoded Text Here\"></textarea>\n" +
+        "                    </div>\n" +
+        "\n" +
+        "                    <div class=\"btn-group-vertical col-xs-12 col-sm-12 col-md-12 col-lg-4\">\n" +
+        "                        <button class=\"btn btn-default\" id='encode-btn'>Encode &gt;&gt;</button>\n" +
+        "                        <button class=\"btn btn-default\" id='decode-btn'>&lt;&lt; Decode</button>\n" +
+        "                    </div>\n" +
+        "\n" +
+        "                    <div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-4\">\n" +
+        "                        <label for=\"encoded-area\">编码</label>\n" +
+        "                        <textarea class=\"form-control\" id=\"encoded-area\" placeholder=\"Encoded Text Here\"></textarea>\n" +
+        "                    </div>"
 
+            function encoderOn(id){
+            $("#encoderFrame").append(encoder_section);
+            }
+
+	        function encoderOff(){
+            $("#encoderFrame").empty();
+		}
+	</script>
+
+    <script>
+	function pic_inserted(){
+		document.getElementById("reply1").value+="[图片]";
+	}
+	</script>
 </html>

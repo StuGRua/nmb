@@ -1,15 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cn">
 
 <head>
 	<meta charset="utf-8">
 	<title>{{post.title}}</title>
 	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
 	<link href="/static/css/newnavbar.css" rel="stylesheet">
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/StuGRua/2020_project/main/favicon.ico" type="image/x-icon">
 	<script type="text/javascript" src="/static/js/md5.js"></script>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	
+
 </head>
 
 <body style="margin-top:60px">
@@ -95,8 +96,9 @@
 					{% endif %}
 				</ul>
 			</div>
-	</div>
-	</nav>
+        </nav>
+    </div>
+
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -218,7 +220,8 @@
 				<h3 class="panel-title">
 					<p><strong>ID:{{post.id}} [板块：{{post.section}}] {{post.title}}</strong></p>
 					<p> <img src="/static/avatars/{{post.avatar}}.jpg" width="30px" height="auto">{{post.poster}}
-						{{post.post_time}}
+						<span class="badge">{{post.post_time}}</span>
+
 						{% if result.admin %}
 						<a href="/delpost/{{post.id}}">删除</a>
 						{% elif result.kookies == post.poster%}
@@ -228,15 +231,19 @@
 				</h3>
 			</div>
 			<div class="panel-body">
-				{%if post.withpic %}
-					<p><img src="/{{post.pic_route}}" height="100px" width="auto"></p>
-					{% endif %}
-				<p id="contentMain">{{post.content |safe}}</p>
-					<a id="{{post.id}}" class="nav-link" href="#" data-toggle="modal" data-target="#myModal3" onclick="replyTo({{post.id}})">回复<b class="caret"></b><!--这里要做成能够按下链接后在textarea里面自动填充>>+回复的POST ID-->
-					</a>
-					<iframe src="/api/harmony" width="0px" height="0px" frameborder="0" id="encoderFrame">
-					</iframe>
-					<button type="button" id="switcher1"onclick="headEncoderOn(0)">打开编码器</button>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    {%if post.withpic %}<p><img src="/{{post.pic_route}}" height="100px" width="auto"></p>{% endif %}
+				    <p id="contentMain">{{post.content |safe}}</p>
+                    <a id="{{post.id}}" class="btn btn-primary" href="#" data-toggle="modal" data-target="#myModal3" onclick="replyTo({{post.id}})">回复<b class="caret"></b><!--这里要做成能够按下链接后在textarea里面自动填充>>+回复的POST ID--></a>
+                </div>
+                <hr>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6" id="encoderFrame">
+
+                </div>
+                <hr>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <button class="btn btn-warning" type="button" id="switcher1"onclick="headEncoderOn(0)">打开编码器</button>
+                </div>
 			</div>
 		</div>
 	</div>
@@ -251,7 +258,8 @@
 				<h3 class="panel-title">
 					<p> <img src="/static/avatars/{{allposts[i].avatar}}.jpg" width="50px" height="auto"
 							style="">ID:{{allposts[i].id}} {{allposts[i].poster}}
-						{{allposts[i].post_time}}
+
+						<span class="badge">{{allposts[i].post_time}}</span>
 						{% if result.admin %}
 						<a href="/delpost/{{allposts[i].id}}">删除</a>
 						{% elif result.kookies == allposts[i].poster%}
@@ -261,19 +269,23 @@
 				</h3>
 			</div>
 			<div class="panel-body">
-				<p>{%if allposts[i].withpic %}
-					<img src="/{{allposts[i].pic_route}}" height="200px" width="auto">
-					{% endif %}</p>
-				<p id="content{{i}}">{{allposts[i].content | safe}}</p>
-						<a id="{{allposts[i].id}}" class="nav-link" href="#" data-toggle="modal" data-target="#myModal3"onclick="replyTo({{allposts[i].id}})">回复<b class="caret"></b><!--这里要做成能够按下链接后在textarea里面自动填充>>+回复的POST ID-->
-						</a>
-						<iframe src="/api/harmony" width="0px" height="0px" frameborder="0" id="encoderFrame{{i}}">
-						</iframe>
-						<button id="switcher2{{i}}" onclick="encoderOn({{i}})">打开编码器</button>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <p>
+                        {%if allposts[i].withpic %}<img src="/{{allposts[i].pic_route}}" height="200px" width="auto">
+                    {% endif %}
+                    </p>
+                    <p id="content{{i}}">{{allposts[i].content | safe}}</p>
+                    <a id="{{allposts[i].id}}" class="btn btn-primary" href="#" data-toggle="modal" data-target="#myModal3"onclick="replyTo({{allposts[i].id}})">回复<b class="caret"></b><!--这里要做成能够按下链接后在textarea里面自动填充>>+回复的POST ID--></a>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 form-group" id="encoderFrame{{i}}">
 
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <button class="btn btn-warning" id="switcher2{{i}}" onclick="encoderOn({{i}})">打开编码器</button>
+                </div>
 			</div>
 		</div>
-		
+
 	</div>
 	</div>
 
@@ -297,7 +309,7 @@
 	</div>
 	{% endif %}
 	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-		<h1><a href="/home">返回主页</a></h1>
+		<a class="btn btn-default" href="/home">返回主页</a>
 	</div>
 	<!-- 模态框（Modal） -->
 	<div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -328,7 +340,7 @@
 			</div><!-- /.modal-content -->
 		</div><!-- /.modal -->
 	</div>
-
+<script type="text/javascript" src="/static/js/harmoncer.js"></script>
 </body>
 <script>
 	{% if result %}
@@ -340,46 +352,61 @@
 		}
 	};
 	{% endif %}
+
+    var encoder_section=
+        "<script>"+
+        "var dl = document.getElementById(\"decode-btn\");\n" +
+        "var el = document.getElementById(\"encode-btn\");\n" +
+        "var ENC = function() {\n" +
+        "    document.getElementById(\"encoded-area\").value=encode(document.getElementById(\"decoded-area\").value);\n" +
+        "document.getElementById(\"decoded-area\").value=\"\";"+
+        "}\n" +
+        "var DEC = function() {\n" +
+        "    document.getElementById(\"decoded-area\").value=decode(document.getElementById(\"encoded-area\").value);\n" +
+        "    document.getElementById(\"encoded-area\").value=\"\";"+
+        "}\n" +
+        "dl.onclick=DEC;\n" +
+        "el.onclick=ENC;"+
+        "<"+"/script>\n"+
+        "                    <div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-4\">\n" +
+        "                        <label for=\"decoded-area\">解码</label>\n" +
+        "                        <textarea class=\"form-control\" id=\"decoded-area\" placeholder=\"Decoded Text Here\"></textarea>\n" +
+        "                    </div>\n" +
+        "\n" +
+        "                    <div class=\"btn-group-vertical col-xs-12 col-sm-12 col-md-12 col-lg-4\">\n" +
+        "                        <button class=\"btn btn-default\" id='encode-btn'>Encode &gt;&gt;</button>\n" +
+        "                        <button class=\"btn btn-default\" id='decode-btn'>&lt;&lt; Decode</button>\n" +
+        "                    </div>\n" +
+        "\n" +
+        "                    <div class=\"col-xs-12 col-sm-12 col-md-12 col-lg-4\">\n" +
+        "                        <label for=\"encoded-area\">编码</label>\n" +
+        "                        <textarea class=\"form-control\" id=\"encoded-area\" placeholder=\"Encoded Text Here\"></textarea>\n" +
+        "                    </div>"
+
 	function headEncoderOn(id){
-		//alert(id);
-		$("#encoderFrame").attr("width","300px");
-		$("#encoderFrame").attr("height","200px");
-		$("#encoderFrame").attr("frameborder","1");
+        $("#encoderFrame").append(encoder_section);
 		document.getElementById("switcher1").innerHTML = "关闭编码器";
 		$("#switcher1").attr("onclick","headEncoderOff()");
-		//id = "#content"+id;
-		//alert(id);
-		//alert(document.getElementById(id).innerHTML);
-		//var content = 
-		//document.getElementById('encoderFrame').contentWindow.document.getElementById('encoded-area').value = content;
 		}
+
 	function headEncoderOff(){
-			$("#encoderFrame").attr("width","0px");
-			$("#encoderFrame").attr("height","0px");
-			$("#encoderFrame").attr("frameborder","0");
+            $("#encoderFrame").empty();
 			document.getElementById("switcher1").innerHTML = "打开编码器"
 			$("#switcher1").attr("onclick","headEncoderOn()");
 		}
+
 	function encoderOn(id){
-		//alert(id);
-		$("#encoderFrame"+id).attr("width","300px");
-		$("#encoderFrame"+id).attr("height","200px");
-		$("#encoderFrame"+id).attr("frameborder","1");
+        $("#encoderFrame"+id).append(encoder_section);
 		document.getElementById("switcher2"+id).innerHTML = "关闭编码器";
 		$("#switcher2"+id).attr("onclick","encoderOff("+id+")");
-		//id = "#content"+id;
-		//alert(id);
-		//alert(document.getElementById(id).innerHTML);
-		//var content = 
-		//document.getElementById('encoderFrame').contentWindow.document.getElementById('encoded-area').value = content;
 		}
+
 	function encoderOff(id){
-			$("#encoderFrame"+id).attr("width","0px");
-			$("#encoderFrame"+id).attr("height","0px");
-			$("#encoderFrame"+id).attr("frameborder","0");
+            $("#encoderFrame"+id).empty();
 			document.getElementById("switcher2"+id).innerHTML = "打开编码器"
 			$("#switcher2"+id).attr("onclick","encoderOn("+id+")");
 		}
+
 	function pic_inserted(id){
 		a = document.getElementById("reply"+id).value;
 		if(a==""){
@@ -401,12 +428,12 @@
 		function enc2(){
 			var password=$("#res_pass").val();
 			var passwd = hex_md5(password);
-			document.getElementById("res_pass").value=passwd; 
-		}	
+			document.getElementById("res_pass").value=passwd;
+		}
 		function enc3(){
 			var password=$("#res_pass1").val();
 			var passwd = hex_md5(password);
-			document.getElementById("res_pass1").value=passwd; 
+			document.getElementById("res_pass1").value=passwd;
 		}
 		function enc_all(){
 			var password=$("#res_pass1").val();
@@ -414,10 +441,11 @@
 			document.getElementById("res_pass1").value=passwd;
 			var password=$("#res_pass").val();
 			var passwd = hex_md5(password);
-			document.getElementById("res_pass").value=passwd; 
+			document.getElementById("res_pass").value=passwd;
 
 		}		</script>
 <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
 <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="/static/js/md5.js"></script>
+<script type="text/javascript" src="/static/js/harmoncer.js"></script>
 </html>

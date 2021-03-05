@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set "VIRTUAL_ENV=C:\Users\N1\PycharmProjects\nmb\venv"
+set "VIRTUAL_ENV=F:\Project\PY\2020_project\venv"
 
 if not defined PROMPT (
     set "PROMPT=$P$G"
